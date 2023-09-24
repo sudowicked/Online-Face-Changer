@@ -1,4 +1,5 @@
 {
+  "homepage": "https://sudowicked.github.io/clm_test/",
   "name": "clmtrackr",
   "version": "1.1.2",
   "description": "Javascript library for precise tracking of facial features via Constrained Local Models",
@@ -6,12 +7,14 @@
   "module": "build/clmtrackr.module.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sudowicked/Auduno-clmtrackr/blob/master/index.html"
+    "url": "https://https://github.com/sudowicked/clm_test/blob/main/static/html/login_register.html"
   },
   "scripts": {
     "build": "rollup -c",
     "build-uglify": "rollup -c && uglifyjs build/clmtrackr.js -c > build/clmtrackr.min.js",
-    "clean": "rm -rf build"
+    "clean": "rm -rf build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "author": {
     "name": "Audun Mathias Øygard",
@@ -23,6 +26,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^6.0.0",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-json": "^2.3.0",

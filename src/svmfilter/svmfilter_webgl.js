@@ -1,5 +1,5 @@
 
-import { setupWebGL, loadShader, createProgram} from '../../examples/js/libs/webgl-utils.js';
+import { setupWebGL, loadShader, createProgram} from '../../static/js/libs/webgl-utils.js';
 
 var webglFilter = function() {
 

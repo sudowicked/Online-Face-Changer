@@ -19,7 +19,7 @@ import faceDetection from './facedetector/faceDetection.js';
 import svmFilter from './svmfilter/svmfilter_fft.js';
 import webglFilter from './svmfilter/svmfilter_webgl.js';
 import mosseFilterResponses from './mossefilter/mosseFilterResponses.js';
-import pModel from '../models/model_pca_20_svm.js';
+import pModel from '../static/models/model_pca_20_svm.js';
 import canRenderToFloatTexture from './utils/webgl_tests.js';
 
 import { version } from '../package.json';
