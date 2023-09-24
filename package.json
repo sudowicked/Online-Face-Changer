@@ -1,0 +1,48 @@
+{
+  "name": "clmtrackr",
+  "version": "1.1.2",
+  "description": "Javascript library for precise tracking of facial features via Constrained Local Models",
+  "main": "build/clmtrackr.js",
+  "module": "build/clmtrackr.module.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sudowicked/Auduno-clmtrackr/blob/master/index.html"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "build-uglify": "rollup -c && uglifyjs build/clmtrackr.js -c > build/clmtrackr.min.js",
+    "clean": "rm -rf build"
+  },
+  "author": {
+    "name": "Audun Mathias Øygard",
+    "email": "amoygard@gmail.com",
+    "url": "https://auduno.com/"
+  },
+  "keywords": [
+    "computer-vision"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "uglify-es": "^3.0.17"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect": "^3.7.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "jquery": "^3.7.0",
+    "jsfeat": "git+https://github.com/inspirit/jsfeat",
+    "mosse": "^0.1.1",
+    "multer": "^1.4.5-lts.1",
+    "numeric": "^1.2.6",
+    "promise-polyfill": "^6.0.2",
+    "raf": "^3.3.2",
+    "serve-static": "^1.15.0",
+    "sqlite3": "^5.1.6"
+  }
+}
