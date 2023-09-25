@@ -56,7 +56,7 @@ app.post('/register', (req, res) => {
             res.send('Registration failed.');
         } else {
             //res.send('Registration successful!');
-            res.redirect('/html/index.html');
+            res.redirect('/html/register_success.html');
         }
         db.close();
     });
