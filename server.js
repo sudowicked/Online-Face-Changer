@@ -122,7 +122,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
                 res.send('Image upload failed.');
             } 
             else {
-                res.redirect(`/annotater/main.html?originalname=${originalname}`);
+                // res.redirect(`/annotater/main.html?originalname=${originalname}`);
+                res.redirect("./html/index.html");
             }
         })
                 
