@@ -36,23 +36,44 @@ function updateSelectWithData() {
 updateSelectWithData();
 
 var clientimages = [];
-
+var clientcoordinates = [];
 
 // Function to update the images array in index.html
 async function updateImages() {
     try {
         const response = await fetch('/getImages');
         const data = await response.json();
-        clientimages = data;
-        images = images.concat(clientimages)
-        console.log('Client Images:', clientimages);
+        const clientimages = data.map((item) => ({
+            id: item.id,
+            path: item.path
+        }));
+        const clientcoordinates = data.map((item) => ({
+            id: item.id,
+            coordinates: JSON.parse(item.coordinates)
+        }));
+
+        images = images.concat(clientimages);
+        console.log('Client Images:', clientcoordinates);
         // Once images are updated, call the function or execute code that relies on clientimages.
-        handleClientImages(images);
+        handleClientImages(images, clientcoordinates, masks);
     } catch (error) {
         console.error('Error fetching image data:', error);
     }
 }
 updateImages();
+
+async function updateCoordinates() {
+    try {
+        const response = await fetch('/getCoordinates');
+        const data = await response.json();
+        coordinates = data;
+        console.log(coordinates);
+    } catch (error) {
+        console.error('Error fetching image data:', error);
+    }
+}
+//updateCoordinates();
+
 
 // Function to update the var images array
 /*function updateImages() {

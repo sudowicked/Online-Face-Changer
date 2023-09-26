@@ -103,7 +103,6 @@ app.post('/login', (req, res) => {
 // Define a route to handle image uploads
 app.post('/upload', upload.single('image'), (req, res) => {
     const { originalname } = req.file;
-
     // Check if the user is logged in (you can implement user sessions here)
     // For demonstration purposes, we assume the user is logged in.
 
@@ -122,8 +121,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
                 res.send('Image upload failed.');
             } 
             else {
-                // res.redirect(`/annotater/main.html?originalname=${originalname}`);
-                res.redirect("./html/index.html");
+                res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
+                
             }
         })
                 
@@ -136,6 +135,39 @@ app.post('/upload', upload.single('image'), (req, res) => {
     // db.close();
 
 });
+
+app.get('/setCoordinates', (req, res) => {
+    const coordinates = req.query.coordinates;
+    const id = req.query.id;
+    const originalname = id.concat(".jpg");
+    if (req.session.userId) {
+        // User is logged in; you can now use req.session.userId for image uploads.
+
+        // Insert the image information along with the user ID into the database.
+        const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
+        const sql = 'UPDATE user_images SET coordinates = ? WHERE user_id = ? AND filename = ?';
+        db.run(sql, [coordinates, req.session.userId, originalname], (err) => {
+            if (err) {
+                console.error(err.message);
+                res.send('Image upload failed.');
+            } 
+            else {
+                // console.log(id, coordinates);
+                res.redirect('/html/index.html');
+                
+            }
+        })
+                
+    }
+    
+    else {
+        // User is not logged in; handle this case.
+        res.send('User is not logged in.');
+    }
+    
+    
+    // Now you can use 'coordinates' and 'id' in your server logic
+  });
 
 app.get('/getSelectData', (req, res) => {
     const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
@@ -174,7 +206,7 @@ app.get('/getImages', (req, res) => {
     const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
     // Fetch data from the database (replace with your own logic)
     userId = req.session.userId;
-    const sql = 'SELECT filename FROM user_images WHERE user_id = ?';
+    const sql = 'SELECT filename, coordinates FROM user_images WHERE user_id = ?';
     db.all(sql, [req.session.userId], (err, rows) => {
         if (err) {
             console.error('Error fetching custom images:', err);
@@ -182,16 +214,19 @@ app.get('/getImages', (req, res) => {
         }   else if (rows && rows.length > 0) {
             const image_url = "../uploads/";
         
-            const customImagesNames = rows.map((row) => row.filename)
-            const customImagesUrls = customImagesNames.map((path) => image_url + path);
-                    
-            const imageData = customImagesNames.map((name, index) => ({
-                id: name.replace('.jpg', ''),
-                path: customImagesUrls[index]
-            }));                
+            // Map rows to the desired format
+            const imageData = rows.map((row) => ({
+                id: row.filename.replace('.jpg', ''),
+                path: image_url + row.filename,
+                coordinates: row.coordinates // Add coordinates to the response
+            }));               
             // Send the data as JSON in the response
             res.json(imageData);
-            };  
+            }
+        else {
+            imageData = [];
+            res.json(imageData);
+        };
                        
     })
 
