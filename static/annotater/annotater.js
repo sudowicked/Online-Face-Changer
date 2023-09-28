@@ -99,7 +99,6 @@ function redirectFunction() {
 	var coordinates = exportToString();
 	var index = originalname.replace("../uploads/", "").replace(".jpg", "");
 	window.location.href = `/setCoordinates?coordinates=${encodeURIComponent(coordinates)}&id=${encodeURIComponent(index)}`;
-	window.location.href = '../html/index.html';
   }
 
 //////

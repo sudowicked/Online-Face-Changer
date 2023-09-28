@@ -47,10 +47,17 @@ async function updateImages() {
             id: item.id,
             path: item.path
         }));
-        const clientcoordinates = data.map((item) => ({
-            id: item.id,
-            coordinates: JSON.parse(item.coordinates)
-        }));
+
+      const clientcoordinates = data.reduce((acc, item) => {
+        // Assuming that item.id contains the key (e.g., "audrey")
+        const key = item.id;
+        const coordinates = JSON.parse(item.coordinates);
+        
+        // Assign the coordinates array to the key in the accumulator object
+        acc[key] = coordinates;
+        
+        return acc;
+    }, {});
 
         images = images.concat(clientimages);
         console.log('Client Images:', clientcoordinates);
@@ -61,18 +68,6 @@ async function updateImages() {
     }
 }
 updateImages();
-
-async function updateCoordinates() {
-    try {
-        const response = await fetch('/getCoordinates');
-        const data = await response.json();
-        coordinates = data;
-        console.log(coordinates);
-    } catch (error) {
-        console.error('Error fetching image data:', error);
-    }
-}
-//updateCoordinates();
 
 
 // Function to update the var images array

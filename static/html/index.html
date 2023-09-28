@@ -433,12 +433,16 @@
 
                 
 
-                
+                var i = 0;
 
                 function handleClientImages(clientimages, clientcoordinates, masks) {
                     console.log(images);
-                    const coordinatesArray = clientcoordinates.map((item) =>  item.coordinates);
-                    console.log(coordinatesArray);
+                    for (var name in clientcoordinates) {
+                    if (clientcoordinates.hasOwnProperty(name)) {
+                        masks[name] = clientcoordinates[name]; // Update the masks object with the coordinates array
+                        }
+                    }
+                    console.log(clientcoordinates);
                     console.log(masks);
                     // create canvases for all the faces
                     
