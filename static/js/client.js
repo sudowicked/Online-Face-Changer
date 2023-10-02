@@ -15,7 +15,6 @@ function updateSelectWithData() {
             data.forEach((optionText) => {
                 // Capitalize the first letter of optionText
                 var capitalizedText = optionText.charAt(0).toUpperCase() + optionText.slice(1);
-                capitalizedText = capitalizedText.replace('.jpg', '')
 
                 const option = document.createElement('option');
                 option.text = capitalizedText;

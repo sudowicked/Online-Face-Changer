@@ -41,25 +41,30 @@ app.use(express.static(path.join(__dirname, '/static')));
 console.log(__dirname);
 app.use(express.urlencoded({ extended: true })); // Enable parsing of form data
 
+const saltRounds = 10;
 
 // Define a route to handle the form submission
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
-
     // Open a connection to the SQLite database
+    const db = new sqlite3.Database('clm_database.db');
+    
+    bcrypt.hash(password, saltRounds, function(err,hash) {
 
-    // Insert the user into the database
-    const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-    db.run(sql, [username, password], (err) => {
-        if (err) {
-            console.error(err.message);
-            res.send('Registration failed.');
-        } else {
-            //res.send('Registration successful!');
-            res.redirect('/html/register_success.html');
-        }
-        db.close();
-    });
+
+        // Insert the user into the database
+        const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
+        db.run(sql, [username, hash], (err) => {
+            if (err) {
+                console.error(err.message);
+                res.send('Registration failed.');
+            } else {
+                //res.send('Registration successful!');
+                res.redirect('/html/register_success.html');
+            }
+            db.close();
+        });
+    })
 });
 
 // Define a route to handle login form submissions
@@ -70,33 +75,41 @@ app.post('/login', (req, res) => {
     // Open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
 
-  
-    // Check if the user exists and the password matches
-    const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
-    db.get(sql, [username, password], (err, row) => {
+    // Retrieve the hashed password from the database based on the provided username
+    const sql = 'SELECT * FROM users WHERE username = ?';
+    db.get(sql, [username], (err, row) => {
         if (err) {
-            console.error(err.message);
-            res.send('Login failed.');
+        console.error(err.message);
+        res.send('Login failed.');
         } else if (row) {
-            // res.send('Login successful! Welcome, ' + row.username + '.');
-            // User found and password matches
-            const userId = row.user_id; // Retrieve the user ID from the database row'
+        const hashedPasswordFromDatabase = row.password;
+
+        // Compare the submitted password with the stored hash
+        bcrypt.compare(password, hashedPasswordFromDatabase, function(err, result) {
+            if (result) {
+            // Passwords match, login successful
+            const userId = row.user_id; // Retrieve the user ID from the database row
             console.log('User ID:', userId);
 
             // You can set the user's ID in the session or handle it as needed here
             req.session.userId = userId;
-        
+
             // Redirect to a secured page (e.g., image upload page) or send a success response.
-            res.redirect('/html/index.html'); 
-           
-        }
-          
-        else {
+            res.redirect('/html/index.html');
+            } else {
+            // Passwords do not match, login failed
             res.redirect('/html/failed_login.html');
-        }
+            }
+            db.close();
+        });
+        } else {
+        // User not found
+        res.redirect('/html/failed_login.html');
         db.close();
+        }
     });
 });
+
 
 
 
@@ -138,8 +151,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
 
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
-    const id = req.query.id;
-    const originalname = id.concat(".jpg");
+    const originalname = req.query.image_id;
+    // const originalname = id.concat(".jpg");
     if (req.session.userId) {
         // User is logged in; you can now use req.session.userId for image uploads.
 
@@ -165,8 +178,7 @@ app.get('/setCoordinates', (req, res) => {
         res.send('User is not logged in.');
     }
     
-    
-    // Now you can use 'coordinates' and 'id' in your server logic
+
   });
 
 app.get('/getSelectData', (req, res) => {
@@ -180,7 +192,7 @@ app.get('/getSelectData', (req, res) => {
             res.status(500).send('Internal Server Error');
         }   else if (rows && rows.length > 0) {
         
-            const customImagesNames = rows.map((row) => row.filename)
+            const customImagesNames = rows.map((row) => path.parse(row.filename).name);
                     
             const selectData = customImagesNames;
             // console.log(customImagesNames);
@@ -216,7 +228,7 @@ app.get('/getImages', (req, res) => {
         
             // Map rows to the desired format
             const imageData = rows.map((row) => ({
-                id: row.filename.replace('.jpg', ''),
+                id: path.parse(row.filename).name,
                 path: image_url + row.filename,
                 coordinates: row.coordinates // Add coordinates to the response
             }));               
