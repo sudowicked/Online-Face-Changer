@@ -5,21 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login or Register</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            background: white;
         }
         .container {
             max-width: 400px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #ffffff00;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
         }
         h1 {
-            color: #333;
+            color: black;
         }
         .form-group {
             text-align: left;
@@ -50,20 +51,77 @@
         .btn:hover {
             background-color: #0056b3;
         }
+
+        /* customizable snowflake styling */
+        .snowflake {
+        color: #000000;
+        font-size: 1em;
+        font-family: Arial;
+        text-shadow: 0 0 1px #000;
+        }
+
+        @-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%{-webkit-transform:translateX(0px);transform:translateX(0px)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}100%{-webkit-transform:translateX(0px);transform:translateX(0px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%{transform:translateX(0px)}50%{transform:translateX(80px)}100%{transform:translateX(0px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s,3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-play-state:running,running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s,3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-play-state:running,running}.snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s}.snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s}.snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s}.snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s}.snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s}.snowflake:nth-of-type(6){left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s}.snowflake:nth-of-type(7){left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s}.snowflake:nth-of-type(8){left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s}.snowflake:nth-of-type(9){left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s}
+        /* Demo Purpose Only*/
+        .demo {
+        font-family: 'Raleway', sans-serif;
+        color:#fff;
+            display: block;
+            margin: 0 auto;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .demo a{
+        font-family: 'Raleway', sans-serif;
+        color: #000;    
+        }
     </style>
 </head>
 <body>
+
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">
+        ☎
+        </div>
+        <div class="snowflake">
+        ❅
+        </div>
+        <div class="snowflake">
+        ⁉
+        </div>
+        <div class="snowflake">
+        ❄
+        </div>
+            <div class="snowflake">
+        ✬
+        </div>
+        <div class="snowflake">
+        ❆
+        </div>
+        <div class="snowflake">
+        ❄
+        </div>
+        <div class="snowflake">
+        ✬
+        </div>
+        <div class="snowflake">
+        ✡
+        </div>
+        <div class="snowflake">
+        ✤
+        </div>
+    </div>
+
     <div class="container">
         <h1 id="heading">Login</h1>
         <div id="loginForm">
             <form action="/login" method="POST">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="login_username">Username:</label>
+                    <input type="text" id="login_username" name="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="login_password">Password:</label>
+                    <input type="password" id="login_password" name="password" required>
                 </div>
                 <button class="btn" type="submit">Login</button>
                 <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
@@ -72,19 +130,21 @@
         <div id="registerForm" style="display: none;">
             <form action="/register" method="POST">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="regiser_username">Username:</label>
+                    <input type="text" id="register_username" name="username" required>
+                    <!-- Add an empty <p> element for displaying the username availability message -->
+                    <p id="usernameAvailability"> </p> 
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="register_password">Password:</label>
+                    <input type="password" id="register_password" name="password" required minlength="6">
                 </div>
-                <button class="btn" type="submit">Register</button>
+                <button class="btn" type="submit" id="register_button">Register</button>
                 <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
             </form>
         </div>
     </div>
-
+      
     <script>
         const heading =  document.getElementById('heading');
         const loginForm = document.getElementById('loginForm');
@@ -104,5 +164,42 @@
             heading.textContent = 'Login';
         });
     </script>
+
+    <script>
+        // JavaScript function to check username availability
+        function checkUsernameAvailability() {
+        const username = document.getElementById('register_username').value;
+    
+        // Send an AJAX request to the server to check if the username exists
+        fetch('/check-username', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+            const messageArea = document.getElementById('usernameAvailability');
+            if (data.exists) {
+                messageArea.textContent = 'Username is already taken';
+                messageArea.style.color = 'red';
+                document.getElementById('register_button').disabled = true;
+            } else {
+                messageArea.textContent = 'Username is available';
+                messageArea.style.color = 'green';
+                document.getElementById('register_button').disabled = false;
+            }
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
+        }
+    
+        // Add an event listener to the username input field
+        const registerUsernameInput = document.getElementById('register_username');
+        registerUsernameInput.addEventListener('input', checkUsernameAvailability);
+    </script>
+
 </body>
 </html>

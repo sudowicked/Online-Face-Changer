@@ -5,13 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Successful</title>
 </head>
-<body>
-    <img src="../51-merchant-6-registration.png" height="390" width="450">
-    
-    <!-- Redirect Button to Login Page -->
-    <div>
 
-        <button onclick="redirectToLogin()">Back to Login</button>
+<style>
+    .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+</style>
+
+<body>
+    <p style="text-align:center;">
+        <img src="../51-merchant-6-registration.png">
+    </p>
+    <!-- Redirect Button to Login Page -->
+    <div style="text-align:center;">
+
+        <button class='button' onclick="redirectToLogin()">Back to Login</button>
 
     </div>
     <!-- JavaScript to Handle the Redirect -->

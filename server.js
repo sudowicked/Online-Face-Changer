@@ -21,6 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const app = express();
+app.use(bodyParser.json()); // Add body-parser middleware
 const port = 8080;
 
 app.set('view engine', 'ejs')
@@ -49,23 +50,62 @@ app.post('/register', (req, res) => {
     // Open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
     
-    bcrypt.hash(password, saltRounds, function(err,hash) {
+    // Check if the username exists in the database
+    const sql = 'SELECT * FROM users WHERE username = ?';
+    db.get(sql, [username], (err, row) => {
+        if (err) {
+            // Handle the error
+            res.status(500).json({ error: 'Server error' });
+        } else if (row) {
+            // Username is already taken, inform the user
+            
+        } else {
+            // Username is available, proceed with registration
+            // Hash and store the password, insert the new user into the database, etc.
+            // ...
 
+            bcrypt.hash(password, saltRounds, function(err,hash) {
 
-        // Insert the user into the database
-        const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-        db.run(sql, [username, hash], (err) => {
-            if (err) {
-                console.error(err.message);
-                res.send('Registration failed.');
-            } else {
-                //res.send('Registration successful!');
-                res.redirect('/html/register_success.html');
-            }
-            db.close();
-        });
-    })
+                // Insert the user into the database
+                const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
+                db.run(sql, [username, hash], (err) => {
+                    if (err) {
+                        console.error(err.message);
+                        res.send('Registration failed.');
+                    } else {
+                        //res.send('Registration successful!');
+                        res.redirect('/html/register_success.html');
+                    }
+                    db.close();
+                });
+            })
+        }
+    });
+
 });
+
+app.post('/check-username', (req, res) => {
+    const { username } = req.body;
+
+    // Open a connection to the SQLite database
+    const db = new sqlite3.Database('clm_database.db');
+
+    const sql = 'SELECT * FROM users WHERE username = ?';
+    db.get(sql, [username], (err, row) => {
+        if (err) {
+            // Handle the database error, e.g., by sending a 500 Internal Server Error response
+            res.status(500).json({ error: 'Database error' });
+        } else {
+            // If row exists, the username is taken; otherwise, it's available
+            const exists = !!row;
+            res.json({ exists });
+        }
+
+        // Always close the database connection when done
+        db.close();
+    });
+});
+
 
 // Define a route to handle login form submissions
 app.post('/login', (req, res) => {
@@ -152,12 +192,12 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
     const originalname = req.query.image_id;
-    // const originalname = id.concat(".jpg");
     if (req.session.userId) {
         // User is logged in; you can now use req.session.userId for image uploads.
 
         // Insert the image information along with the user ID into the database.
-        const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
+        const db = new sqlite3.Database('clm_database.db'); 
+
         const sql = 'UPDATE user_images SET coordinates = ? WHERE user_id = ? AND filename = ?';
         db.run(sql, [coordinates, req.session.userId, originalname], (err) => {
             if (err) {
@@ -165,7 +205,6 @@ app.get('/setCoordinates', (req, res) => {
                 res.send('Image upload failed.');
             } 
             else {
-                // console.log(id, coordinates);
                 res.redirect('/html/index.html');
                 
             }
@@ -182,8 +221,8 @@ app.get('/setCoordinates', (req, res) => {
   });
 
 app.get('/getSelectData', (req, res) => {
-    const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
-    // Fetch data from the database (replace with your own logic)
+    const db = new sqlite3.Database('clm_database.db');
+    // Fetch data from the database 
     userId = req.session.userId;
     const sql = 'SELECT filename FROM user_images WHERE user_id = ?';
     db.all(sql, [req.session.userId], (err, rows) => {
@@ -214,7 +253,6 @@ app.get('/getSelectData', (req, res) => {
 app.get('/getImages', (req, res) => {
     // Fetch image data from your database or other source
     
-
     const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
     // Fetch data from the database (replace with your own logic)
     userId = req.session.userId;
