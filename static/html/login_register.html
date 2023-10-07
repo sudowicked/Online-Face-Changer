@@ -57,7 +57,18 @@
             padding: 10px;
             border: 2px solid #000000;
             border-radius: 5px;
+            background-color: #8386c5be;
+            
         }
+        input:hover { 
+            color: black; 
+            cursor: pointer;
+        }
+        input:focus { 
+            outline: none;
+        }
+
+
         .btn {
             display: inline-block;
             padding: 10px 20px;
@@ -75,6 +86,7 @@
 
         .href-link {
             color:#850c5d;
+            text-decoration: none;
         }
 
         .error-message {
@@ -114,6 +126,12 @@
             background: rgba(255, 255, 255, 0.2);
             animation: animate 25s linear infinite;
             bottom: -150px;
+            background-image: url('../51-merchant-6-registration.png'); /* Replace 'path_to_your_image.jpg' with your image file path */
+            background-size: cover;
+            background-position: center center;
+            transform-origin: center; /* Center the rotation */
+            transform-style: preserve-3d; /* Enable 3D transformations */
+            transform: translateZ(40px);
             
         }
 
@@ -193,8 +211,6 @@
             animation-duration: 11s;
         }
 
-
-
         @keyframes animate {
 
             0%{
@@ -212,7 +228,7 @@
         }
     </style>
 </head>
-<body>
+<body>   
 
     <div class="container">
         <div class="login-container">
@@ -289,6 +305,7 @@
         // JavaScript function to check username availability
         function checkUsernameAvailability() {
         const username = document.getElementById('register_username').value;
+        
     
         // Send an AJAX request to the server to check if the username exists
         fetch('/check-username', {
