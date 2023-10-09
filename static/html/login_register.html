@@ -56,13 +56,7 @@
             width: 50%;
             padding: 10px;
             border: 2px solid #000000;
-            border-radius: 5px;
-            background-color: #8386c5be;
-            
-        }
-        input:hover { 
-            color: black; 
-            cursor: pointer;
+            border-radius: 5px; 
         }
         input:focus { 
             outline: none;
@@ -72,7 +66,7 @@
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #850c5d;
+            background-color:  #8f94fb;
             color: #fff;
             text-decoration: none;
             border: none;
@@ -81,19 +75,31 @@
             margin-bottom: 10px;
         }
         .btn:hover {
-            background-color: #bb1183;
+            background-color: #AE86AF;
         }
 
         .href-link {
-            color:#850c5d;
+            color: #8f94fb;
             text-decoration: none;
+            font-style: italic;
+            font-family: 'Crimson Pro', sans-serif;
+        }
+        .href-link:hover {
+            color: #AE86AF;
         }
 
         .error-message {
-        color: #850c5d;
-        font-family: 'Crimson Pro', sans-serif;
-        font-style: italic;
-        font-size: 18px;
+            color:  #8f94fb;
+            font-family: 'Crimson Pro', sans-serif;
+            font-style: italic;
+            font-size: 18px;
+        }
+
+        .warning-symbol {
+            color:  #8f94fb;
+            font-family: 'Crimson Pro', sans-serif;
+            text-decoration: none;
+            font-size: 18px;
         }
 
         .area {
@@ -126,7 +132,7 @@
             background: rgba(255, 255, 255, 0.2);
             animation: animate 25s linear infinite;
             bottom: -150px;
-            background-image: url('../51-merchant-6-registration.png'); /* Replace 'path_to_your_image.jpg' with your image file path */
+            /* background-image: url('../51-merchant-6-registration.png'); /* Replace 'path_to_your_image.jpg' with your image file path */
             background-size: cover;
             background-position: center center;
             transform-origin: center; /* Center the rotation */
@@ -228,8 +234,8 @@
         }
     </style>
 </head>
-<body>   
 
+<body>   
     <div class="container">
         <div class="login-container">
             <h1 id="heading">Login</h1>
@@ -319,13 +325,19 @@
             .then((data) => {
             const messageArea = document.getElementById('usernameAvailability');
             if (data.exists) {
-                messageArea.textContent = 'Username is already taken';
+                // Create a p element with the ⚠️ symbol
+                const paragraph = document.createElement('p');
+                paragraph.innerHTML = '<span class="warning-symbol">⚠️</span> <span class = "error-message"> Username is already taken </span>';
+
+                // Add the paragraph to the messageArea
+                messageArea.innerHTML = ''; // Clear any previous content
+                messageArea.appendChild(paragraph);
+
                 document.getElementById('register_button').disabled = true;
             } else {
-                messageArea.textContent = 'Username is available';
+                messageArea.textContent = '';
                 document.getElementById('register_button').disabled = false;
             }
-            messageArea.classList.add('error-message'); // Add error message styling
             })
             .catch((error) => {
             console.error('Error:', error);
