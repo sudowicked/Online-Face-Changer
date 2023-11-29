@@ -286,7 +286,16 @@ app.get('/getSelectData', (req, res) => {
             // Send the data as JSON in the response
             res.json(responseData);
             }  
-            
+        else {
+            const selectData = [];
+            const extensions = [];
+            const responseData = {
+                selectData: selectData,
+                imageExtensions: extensions
+            };
+            res.json(responseData);
+        }
+                       
         })
         
     //const selectData = ["Option 1", "Option 2", "Option 3"];
