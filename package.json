@@ -44,6 +44,7 @@
     "mosse": "^0.1.1",
     "multer": "^1.4.5-lts.1",
     "numeric": "^1.2.6",
+    "perfect-scrollbar": "^1.5.5",
     "promise-polyfill": "^6.0.2",
     "raf": "^3.3.2",
     "serve-static": "^1.15.0",

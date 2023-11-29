@@ -149,10 +149,7 @@ if (window.File && window.FileReader && window.FileList) {
 		
 		
 
-		if (fileList.length > 1) {
-      document.getElementById('forward').disabled = false;
-    }
-    
+   
     document.getElementById('coordinates').innerHTML = '';
 		
 		loadImage();
@@ -198,65 +195,6 @@ function addCustomImageToFiles(imagePath) {
 // Call addCustomImageToFiles with the path to your custom image
 // addCustomImageToFiles('../uploads/vin.jpg');
 
-
-// set up function to change image in a div
-function nextImage() {
-	if (fileIndex < fileList.length-1) {
-		// store data in webstorage
-		coordinates = getParameters();
-		
-		// divide by scale
-	for (var i = 0;i < coordinates.length;i++) {
-		coordinates[i][0][0] /= scale;
-		coordinates[i][0][1] /= scale;
-	}
-		
-		var stringCoordinates = JSON.stringify(coordinates);
-		localStorage.setItem(fileList[fileIndex].name, stringCoordinates)
-		
-		fileIndex += 1;
-		loadImage();
-	}
-	scale = 1.0;
-	
-	if (fileIndex == fileList.length-1) {
-	  document.getElementById('forward').disabled = true;
-	} else {
-	  document.getElementById('forward').disabled = false;
-	}
-	document.getElementById('back').disabled = false;
-	
-	document.getElementById('coordinates').innerHTML = '';
-}
-
-function prevImage() {
-	if (fileIndex > 0) {
-		// store data in webstorage
-		coordinates = getParameters();
-		
-		// divide by scale
-		for (var i = 0;i < coordinates.length;i++) {
-			coordinates[i][0][0] /= scale;
-			coordinates[i][0][1] /= scale;
-		}
-		
-		var stringCoordinates = JSON.stringify(coordinates);
-		localStorage.setItem(fileList[fileIndex].name, stringCoordinates)
-		
-		fileIndex -= 1;
-		loadImage();
-	}
-	scale = 1.0;
-  
-	document.getElementById('forward').disabled = false;
-	if (fileIndex == 0) {
-	  document.getElementById('back').disabled = true;
-	} else {
-	  document.getElementById('back').disabled = false;
-	}
-	
-	document.getElementById('coordinates').innerHTML = '';
-}
 
 // set up html webstorage for variables
 
@@ -527,7 +465,6 @@ function loadImage() {
 		})(fileList[fileIndex]);
 		reader.readAsDataURL(fileList[fileIndex]);
 	}
-	document.getElementById('imagenumber').innerHTML = (fileIndex+1)+" / "+fileList.length; 
 }
 
 // function to start estimating parameters

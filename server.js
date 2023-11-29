@@ -151,43 +151,49 @@ app.post('/login', (req, res) => {
 });
 
 
-
-
-// Define a route to handle image uploads
 app.post('/upload', upload.single('image'), (req, res) => {
-    const { originalname } = req.file;
-    // Check if the user is logged in (you can implement user sessions here)
-    // For demonstration purposes, we assume the user is logged in.
+    var { originalname } = req.file;
 
-    // You can store the image information in the database or perform other actions here.
-    // Example: Save the image filename in the database.
-    // Check if the user is logged in (i.e., their user ID is in the session)
+    // Check if the user is logged in
     if (req.session.userId) {
-        // User is logged in; you can now use req.session.userId for image uploads.
+        const db = new sqlite3.Database('clm_database.db');
 
-        // Insert the image information along with the user ID into the database.
-        const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
-        const sql = 'INSERT INTO user_images (user_id, filename) VALUES (?, ?)';
-        db.run(sql, [req.session.userId, originalname], (err) => {
-            if (err) {
-                console.error(err.message);
+        // Check if the filename already exists for the specific user
+        const sqlCheck = 'SELECT COUNT(*) AS count FROM user_images WHERE user_id = ? AND filename = ?';
+
+        db.get(sqlCheck, [req.session.userId, originalname], (checkErr, row) => {
+            if (checkErr) {
+                console.error(checkErr.message);
                 res.send('Image upload failed.');
-            } 
-            else {
-                res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
-                
+            } else {
+                if (row.count > 0) {
+                    // Duplicate found, display a warning message
+                    res.send(`
+                    <script>
+                        alert('Warning: An image with this filename already exists. Please choose a different image.');
+                        window.location.href = './html/index.html'; // Redirect to the original page if needed
+                    </script>
+                `);
+                } else {
+                    // Filename is unique, insert the image information into the database
+                    const sqlInsert = 'INSERT INTO user_images (user_id, filename) VALUES (?, ?)';
+                    db.run(sqlInsert, [req.session.userId, originalname], (insertErr) => {
+                        if (insertErr) {
+                            console.error(insertErr.message);
+                            res.send('Image upload failed.');
+                        } else {
+                            res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
+                        }
+                    });
+                }
             }
-        })
-                
-    }
-    
-    else {
+        });
+    } else {
         // User is not logged in; handle this case.
         res.send('User is not logged in.');
     }
-    // db.close();
-
 });
+
 
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
@@ -220,6 +226,35 @@ app.get('/setCoordinates', (req, res) => {
 
   });
 
+app.get('/discardUpload', (req, res) => {
+    const originalname = req.query.image_id;
+    if (req.session.userId) {
+        // User is logged in; you can now use req.session.userId for image uploads.
+        console.log(originalname);
+        // Insert the image information along with the user ID into the database.
+        const db = new sqlite3.Database('clm_database.db'); 
+
+        const sql = 'DELETE FROM user_images WHERE user_id = ? AND filename = ?';
+        db.run(sql, [req.session.userId, originalname], (err) => {
+            if (err) {
+                console.error(err.message);
+                res.send('Discard upload failed.');
+            } 
+            else {
+                res.redirect('/html/index.html');
+                
+            }
+        })
+                
+    }
+    
+    else {
+        // User is not logged in; handle this case.
+        res.send('User is not logged in.');
+    }
+    
+  }); 
+
 app.get('/getSelectData', (req, res) => {
     const db = new sqlite3.Database('clm_database.db');
     // Fetch data from the database 
@@ -229,18 +264,29 @@ app.get('/getSelectData', (req, res) => {
         if (err) {
             console.error('Error fetching custom images:', err);
             res.status(500).send('Internal Server Error');
-        }   else if (rows && rows.length > 0) {
+        }   
+        
+        else if (rows && rows.length > 0) {
         
             const customImagesNames = rows.map((row) => path.parse(row.filename).name);
+            const extensions = rows.map((row) => row.filename);
                     
             const selectData = customImagesNames;
+
+            // Create an object with both arrays
+            const responseData = {
+                selectData: selectData,
+                imageExtensions: extensions
+            };
+
+            
             // console.log(customImagesNames);
             // const selectData = ["Option 1", "Option 2", "Option 3"];
                             
             // Send the data as JSON in the response
-            res.json(selectData);
-            };  
-                       
+            res.json(responseData);
+            }  
+            
         })
         
     //const selectData = ["Option 1", "Option 2", "Option 3"];
@@ -274,7 +320,7 @@ app.get('/getImages', (req, res) => {
             res.json(imageData);
             }
         else {
-            imageData = [];
+            const imageData = [];
             res.json(imageData);
         };
                        

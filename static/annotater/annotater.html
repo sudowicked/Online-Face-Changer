@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <title>PDM annotation</title>
   <link rel="stylesheet" type="text/css" href="./css/imgareaselect-default.css" />
-  
+   
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/jquery.imgareaselect.pack.js"></script>
   <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script> 
   <script src="./js/json2.js"></script>
   <script src="./js/BlobBuilder.min.js"></script>
   <script src="./js/Filesaver.min.js"></script>
@@ -18,21 +18,30 @@
   <script src="./js/model_pca_20_svm.js"></script>
   
   <style>
+
     #container {
-      position : relative;
+      position : relative;  
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
     }
     
     #vis {
       position : absolute;
       z-index : 10;
+      margin: auto;
     }
     
+
+
     #imageholder {
-      /*position : absolute;*/
+      position : absolute;
+
     }
     
     #sketch {
       display : none;
+      margin: auto;
     }
     
     .t, .controltext {
@@ -48,19 +57,27 @@
       stroke: #000;
       stroke-width: .5px;
     }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+      margin: 0;
+    }
   </style>
 </head>
 <body>
-  <canvas id="sketch" width="138" height="138"></canvas>
+  <canvas id="sketch"></canvas>
   <p>
     Load images:
     <input type="file" id="files" name="files[]" multiple />
-    <span id="imagenumber"></span>
-    
  
-    <input type="button" value="Back to index.html" id="back"/>
+    <input type="button" value="Discard Changes" id="discard"/>
+    <input type="button" value="Accept Changes" id="accept"/>
  
-    <input type="button" value="next" id="forward" disabled />
+  <!--  <input type="button" value="next" id="forward" disabled /> -->
   </p>
   <p>
     <input type="button" value="save annotations to csv" id="savefile"/>
@@ -108,12 +125,13 @@
   </script>
   <script src="./annotater.js"></script>
   <div id="container">
-  <div id="vis">
-  </div>
-  <span id="imageholder"></span>
-  </div>
+    <div id="vis"></div>
+    <div></div>
+    <span id="imageholder"></span>
+    </div>
   <input type="button" value="export current coordinates" id="exportCoord"/>
   <p id="coordinates"></p>
+  </div>
 
   <script>
     const image_url = "../uploads/";
@@ -130,15 +148,21 @@
 
 
   <script>
+    function discardChanges() {
+      // window.location.href = "../html/index.html";
+      var image_id = originalname.replace("../uploads/", "");
+      window.location.href = `/discardUpload?image_id=${encodeURIComponent(image_id)}`;
+    }
+
     // Call addCustomImageToFiles with the path to your custom image
     addCustomImageToFiles(originalname);
 
-    document.getElementById('back').addEventListener("click", redirectFunction);
-    document.getElementById('forward').addEventListener("click", function() {nextImage();});
+    document.getElementById('accept').addEventListener("click", redirectFunction);
+    document.getElementById('discard').addEventListener("click", discardChanges);
     document.getElementById('savefile').addEventListener("click", function() {storeToCSV("annotations.csv");});
     document.getElementById('cleardata').addEventListener("click", function() {localStorage.clear();});
     document.getElementById('manualselect').addEventListener("click", function() {selectBox();});
-    document.getElementById('exportCoord').addEventListener("click", function() {var te = exportToString();document.getElementById('coordinates').innerHTML = te;});
+    // document.getElementById('exportCoord').addEventListener("click", function() {var te = exportToString(); document.getElementById('coordinates').innerHTML = te;});
     document.getElementById('zoomin').addEventListener("click", function() {scaleUp();});
     document.getElementById('zoomout').addEventListener("click", function() {scaleDown();});
   </script>
