@@ -230,7 +230,7 @@ app.get('/discardUpload', (req, res) => {
     const originalname = req.query.image_id;
     if (req.session.userId) {
         // User is logged in; you can now use req.session.userId for image uploads.
-        console.log(originalname);
+
         // Insert the image information along with the user ID into the database.
         const db = new sqlite3.Database('clm_database.db'); 
 

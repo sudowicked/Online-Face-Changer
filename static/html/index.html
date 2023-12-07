@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Face substitution</title>
+        <title>Faceswapp</title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
         <style>
@@ -9,9 +9,12 @@
         
             body {
                 font-family: 'Lato';
-                background-color: #f0f0f0;
+                background-image: url('../images/Background_Homepage.jpg'); /* Use the url() function to specify the image path */
+                background-size: cover; /* Adjust as needed based on your design preferences */
+                background-repeat: no-repeat;
                 margin: 0px auto;
-                max-width: 1150px;
+                max-width: 100%;
+                height: 100%;
             }
 
             #overlay, #webgl {
@@ -127,7 +130,7 @@
 
             .menu-item:hover {
                 transform: scale(.9);
-                color: rgb(214, 214, 33);
+                color: #d6d621;
             }
 
             .capture-button {
@@ -192,16 +195,16 @@
                 transform: scale(0);
             }
 
-            .button-74 {
+            .stop-button {
                 margin-top:2%;
-                background-color: rgba(37, 106, 170, 0.712);
-                border: 2px solid #422800;
+                background-color: #1e8ff85b;
+                border: 2px solid #003478;
                 border-radius: 20px;
-                box-shadow: #422800 4px 4px 0 0;
-                color: #422800;
+                box-shadow: #003478 4px 4px 0 0;
+                color: #fbfef9;
                 cursor: pointer;
                 display: inline-block;
-                font-weight: 600;
+                font-weight: 400;
                 font-size: 18px;
                 padding: 0 18px;
                 line-height: 50px;
@@ -210,13 +213,38 @@
                 user-select: none;
             }
 
-            .button-74:hover {
-                background-color: #fff;
+            .start-button{
+                margin-top:2%;
+                background-color: #1e8ff85b;
+                border: 2px solid #003478;
+                border-radius: 20px;
+                box-shadow: #003478 -4px 4px 0 0;
+                color: #fbfef9;
+                cursor: pointer;
+                display: inline-block;
+                font-weight: 400;
+                font-size: 18px;
+                padding: 0 18px;
+                line-height: 50px;
+                text-align: center;
+                text-decoration: none;
+                user-select: none;
             }
 
-            .button-74:active {
-                box-shadow: #422800 2px 2px 0 0;
+            .stop-button:hover {
+                box-shadow: #003478 2px 2px 0 0;
                 transform: translate(2px, 2px);
+                color:#d6d621;
+            }
+
+            .start-button:hover {
+                box-shadow: #003478 -2px 2px 0 0;
+                transform: translate(2px, 2px);
+                color:#d6d621;
+            }
+
+            .stop-button:active,.start-button:active {
+                transform: translate(4px, 4px);
             }
 
             .delete-button {
@@ -291,8 +319,8 @@
             </div>
         
             <div id="controls">
-                <input class="button-74" type="button" value="wait, loading video & images" disabled="disabled" onclick="startVideoFunction()" id="startbutton"></input>
-                <input class="button-74" type="button" value="Stop Tracking" onclick="stopTracking()" id="stopbutton"></input>
+                <input class="start-button" type="button" value="Wait, loading video & images" disabled="disabled" onclick="startVideoFunction()" id="startbutton"></input>
+                <input class="stop-button" type="button" value="Stop Tracking" onclick="stopTracking()" id="stopbutton"></input>
                 <div class="custom-select"  id="select-container">
                     <select name="mask" id="selectmask" class="hidden">
                         <option value="0">Average face</option>
@@ -876,7 +904,7 @@
                     // Create a link element to allow the user to download the screenshot
                     var downloadLink = document.createElement('a');
                     downloadLink.href = screenshotDataURL;
-                    downloadLink.download = 'Faceapp.png'; // Specify the filename
+                    downloadLink.download = 'Faceswapp.png'; // Specify the filename
                     downloadLink.click();
                 }
 

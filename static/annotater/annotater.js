@@ -1,99 +1,43 @@
-
 var scale = 1.0;
-var scaleLock = false;
-function scaleUp() {
-	if (scaleLock) return;
-	else {
-		scaleLock = true;
-		
-		// change canvas size
-		var canvas = document.getElementById('imgcanvas')
-		if (!canvas) {
-			scaleLock = false;
-			return;
-		}
-		if (canvas.style.width == "") {
-			var cw = canvas.width;
-			var ch = canvas.height;
-			var scaling = 10/9;
-			canvas.style.width = cw*scaling+"px";
-			canvas.style.height = ch*scaling+"px";
-		} else {
-			var cw = canvas.style.width;
-			var ch = canvas.style.height;
-			cw = parseFloat(cw.substring(0,cw.length-2));
-			ch = parseFloat(ch.substring(0,ch.length-2));
-			var scaling = 10/9;
-			canvas.style.width = cw*scaling+"px";
-			canvas.style.height = ch*scaling+"px";
-		}
 
-		scale = scale * scaling;
-	
-		$("svg").height($("svg").height()*scaling);
-		$("svg").width($("svg").width()*scaling);
-		
-		// get current points & scale them
-		var params = getParameters();
-		for (var i = 0;i < params.length;i++) {
-		  params[i][0][0] *= scaling;
-		  params[i][0][1] *= scaling;
-		}
-		
-		// render
-		renderPoints(params, cw*scaling, ch*scaling);
+function fitToScreen() {
+    // change canvas size
+    var canvas = document.getElementById('imgcanvas');
+    if (!canvas) {
+        return;
+    }
 
-		scaleLock = false;
-	}
+    // Calculate the maximum dimensions based on the page size
+    var maxWidth = window.innerWidth / 1.5;
+    var maxHeight = window.innerHeight / 1.5;
+
+    // Calculate the scaling factor based on the maximum dimensions
+    var scaling = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
+
+    // Apply the scaling to the canvas size
+    canvas.style.width = canvas.width * scaling + "px";
+    canvas.style.height = canvas.height * scaling + "px";
+
+    scale = scale * scaling;
+
+    // Scale SVG element
+    $("svg").height($("svg").height() * scaling);
+    $("svg").width($("svg").width() * scaling);
+
+    // get current points & scale them
+    var params = getParameters();
+    for (var i = 0; i < params.length; i++) {
+        params[i][0][0] *= scaling;
+        params[i][0][1] *= scaling;
+    }
+
+    // render
+    renderPoints(params, canvas.width * scaling, canvas.height * scaling);
 }
 
-function scaleDown() {
-	if (scaleLock) return;
-	else {
-		scaleLock = true;
-		
-		// change canvas size
-		var canvas = document.getElementById('imgcanvas')
-		if (!canvas) {
-			scaleLock = false;
-			return;
-		}
-		if (canvas.style.width == "") {
-			var cw = canvas.width;
-			var ch = canvas.height;
-			var scaling = 0.9;
-		} else {
-			var cw = canvas.style.width;
-			var ch = canvas.style.height;
-			cw = parseFloat(cw.substring(0,cw.length-2));
-			ch = parseFloat(ch.substring(0,ch.length-2));
-			var scaling = 0.9;
-		}
-		if (cw < 50) {
-			scaleLock = false;
-			return;
-		}
-		canvas.style.width = cw*scaling+"px";
-		canvas.style.height = ch*scaling+"px";
-
-		scale = scale * scaling;
-
-		$("svg").height($("svg").height()*scaling);
-		$("svg").width($("svg").width()*scaling);
-		
-		// get current points & scale them
-		var params = getParameters();
-		for (var i = 0;i < params.length;i++) {
-			params[i][0][0] *= scaling;
-			params[i][0][1] *= scaling;
-		}
-		
-		// render
-		renderPoints(params, cw*scaling, ch*scaling);
-
-		scaleLock = false;
-	}
-}
+setTimeout(() => {
+	fitToScreen();;
+}, 100);
 
 function redirectFunction() {
 	var coordinates = exportToString();
@@ -109,49 +53,16 @@ var coordinates = [];
 // set up file selector and variables to hold selections
 var fileList, fileIndex;
 if (window.File && window.FileReader && window.FileList) {
-	function handleFileSelect(evt) {
-		/*var files = evt.target.files;
-		console.log(files);
-		fileList = [];
-		for (var i = 0;i < files.length;i++) {
-			if (!files[i].type.match('image.*')) {
-				continue;
-			}
-			fileList.push(files[i]);
+	function handleFileSelect(file) {
+		fileList = [file];
+		fileIndex = 0;
+	
+		if (!file.type.match('image.*')) {
+			console.error('Selected file is not an image.');
+			return;
 		}
-		if (files.length > 0) {
-			fileIndex = 0;
-		}
-		// check if any of the images are already in local storage
-		/* for (var i = 0;i < files.length;i++) {
-			if (localStorage.getItem(files[i].name)) {
-				// ask if item should be deleted
-				if (confirm("Local storage already contains data for some of these images. Clear storage?")) {
-					localStorage.clear();
-				}
-				break;
-			}
-		} */
-		files = evt;
-		fileList = [];
-		for (var i = 0;i < files.length;i++) {
-			if (!files[i].type.match('image.*')) {
-				continue;
-			}
-			fileList.push(files[i]);
-		}
-		if (files.length > 0) {
-			fileIndex = 0;
-		}
-		
+	
 		localStorage.clear();
-		
-		
-		
-
-   
-    document.getElementById('coordinates').innerHTML = '';
-		
 		loadImage();
 	}
 	
@@ -175,15 +86,8 @@ function addCustomImageToFiles(imagePath) {
             // Create a File object from the fetched blob
             const customImage = new File([xhr.response], 'custom_image.png', { type: 'image/png' });
 
-            // Create a FileList containing your custom image
-            const customFileList = new DataTransfer();
-            customFileList.items.add(customImage);
-
-            // Set the fileList variable to your custom FileList
-            fileList = customFileList.files;
-
             // Trigger the handleFileSelect function to load your custom image
-            handleFileSelect(fileList);
+            handleFileSelect(customImage);
         } else {
             console.error('Failed to fetch custom image:', xhr.status);
         }
@@ -191,9 +95,6 @@ function addCustomImageToFiles(imagePath) {
 
     xhr.send();
 }
-
-// Call addCustomImageToFiles with the path to your custom image
-// addCustomImageToFiles('../uploads/vin.jpg');
 
 
 // set up html webstorage for variables
@@ -457,7 +358,8 @@ function loadImage() {
 						// storeCurrent();
 					} else {
 						clear();
-						alert("Did not manage to detect position of face in this image. Please select position of face by clicking 'manually select face' and dragging a box around the face.")
+						alert("Did not manage to detect position of face in this image. Please use a different image.")
+						window.location.href = "../html/index.html";
 					}
 				}
 				img.src = e.target.result;
@@ -491,15 +393,17 @@ function estimatePositions(box) {
 					alert("Having some problems converging on a face in this image. Using the best estimate.");
 					break;
 				} else {
-					alert("Having some problems converging on a face in this image. Please try again.");
+					alert("Having some problems converging on a face in this image. Please use a different image.");
 					return false;
 				}
 			}
 		} else {
 			curpoints = ctrack.track(document.getElementById('imgcanvas'));
 			if (!curpoints) {
-				alert("There was a problem converging on a face in this image. Please try again by clicking 'manually select face' and dragging a box around the face.");
+				alert("There was a problem converging on a face in this image. Please use a different image.");
+				discardChanges();
 				return false;
+				
 			}
 		}
 
@@ -558,70 +462,6 @@ function estimatePositions(box) {
 	return curpoints;
 }
 
-function storeToCSV(filename) {
-	
-	if (typeof(fileIndex) !== "undefined") {
-    //store current image
-    var coordinates = getParameters();
-    // divide by scale
-    for (var i = 0;i < coordinates.length;i++) {
-      coordinates[i][0][0] /= scale;
-      coordinates[i][0][1] /= scale;
-    }
-    var stringCoordinates = JSON.stringify(coordinates);
-    localStorage.setItem(fileList[fileIndex].name, stringCoordinates)
-	}
-	
-	var bb = new BlobBuilder;
-	// get all data
-	var localStorageKeys = Object.keys(localStorage);
-	for (var i = 0;i < localStorageKeys.length;i++) {
-		var string = localStorageKeys[i];
-		var coords = localStorage.getItem(localStorageKeys[i]);
-		coords = JSON.parse(coords);
-		for (var j = 0;j < coords.length;j++) {
-			string += ";"+coords[j][0][0]+";"+coords[j][0][1]+";"+coords[j][1];
-		}
-		string += "\n";
-		bb.append(string);
-	}
-	
-	// write to blob
-	var blob = bb.getBlob("text/plain;charset=utf-8");
-	// save
-	saveAs(blob, filename);
-}
-
-function loadCSV(file) {
-	debugger;
-	var reader = new FileReader();
-	var str;
-	reader.onload = function(theFile) {
-		str = theFile.target.result;
-		var lines = str.split(/[\r\n|\n]+/);
-		for (var i = 0;i < lines.length;i++) {
-			//do sturff
-			lines[i]  = lines[i].replace(/(\r\n|\n|\r|)/gm,"").split(/[,;]+/);
-			var name = lines[i][0];
-			var points = [];
-			for (var j = 1;j < lines[i].length;j += 3) {
-				points.push([[ parseFloat(lines[i][j]), parseFloat(lines[i][j+1]) ], (lines[i][j+2] == "true")]);
-			}
-			/*for (var j = 1;j < lines[i].length;j += 2) {
-				if (lines[i][j] == "null") {
-					points.push([[0,0],false]);
-				} else {
-					points.push([[ parseFloat(lines[i][j]), parseFloat(lines[i][j+1]) ],true]);
-				}
-			}*/
-			points = JSON.stringify(points);
-			localStorage.setItem(name, points)
-		}
-	}
-	reader.onerror = function() {alert("error reading file")};
-	reader.readAsText(file.target.files[0]);
-}
-// document.getElementById('loadcsv').addEventListener('change', loadCSV, false);
 
 // manual selection of faces (with jquery imgareaselect plugin)
 function selectBox() {

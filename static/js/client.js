@@ -97,7 +97,7 @@ function createOptionsContainer() {
 
                 deleteButton.style.fontFamily = '"Material Symbols Outlined", sans-serif';
 
-                console.log(extension);
+                // console.log(extension);
 
                 optionContainer.appendChild(deleteButton);
             }
