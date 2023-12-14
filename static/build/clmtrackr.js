@@ -5097,7 +5097,7 @@ function mosseFilter(params) {
         var canvas = document.createElement("canvas");
         canvas.setAttribute('width', _w);
         canvas.setAttribute('height', _h);
-        _cc = canvas.getContext('2d');
+        _cc = canvas.getContext('2d', { willReadFrequently: true });
     };
     
     this.init = function(w,h) {
@@ -5132,7 +5132,7 @@ function mosseFilter(params) {
         var canvas = document.createElement("canvas");
         canvas.setAttribute('width', _w);
         canvas.setAttribute('height', _h);
-        _cc = canvas.getContext('2d');
+        _cc = canvas.getContext('2d', { willReadFrequently: true });
     };
     
     // fft function
@@ -5314,7 +5314,7 @@ function mosseFilter(params) {
             var dc = document.createElement('canvas');
             dc.setAttribute('width', 32);
             dc.setAttribute('height', 32);
-            var dcc = dc.getContext('2d');
+            var dcc = dc.getContext('2d', { willReadFrequently: true });
             var psci = dcc.createImageData(32, 32);
             var pscidata = psci.data;
             for (var j = 0;j < 32*32;j++) {
@@ -11516,7 +11516,7 @@ var jsfeat_face = function(parameters) {
 	var useWebWorkers = params.useWebWorkers;
 
 	var work_canvas = document.createElement('canvas');
-	var work_ctx = work_canvas.getContext('2d');
+	var work_ctx = work_canvas.getContext('2d', { willReadFrequently: true });
 
 	var videoWidth, videoHeight, scale, video, w, h;
 	var img_u8, edg, ii_sum, ii_sqsum, ii_tilted, ii_canny, classifier;
@@ -14385,7 +14385,7 @@ var clm = {
 		var webglFi, svmFi, mosseCalc;
 
 		var scoringCanvas = document.createElement('canvas');
-		var scoringContext = scoringCanvas.getContext('2d');
+		var scoringContext = scoringCanvas.getContext('2d', { willReadFrequently: true });
 		var msxmin, msymin, msxmax, msymax;
 		var msmodelwidth, msmodelheight;
 		var scoringWeights, scoringBias;
@@ -14426,7 +14426,7 @@ var clm = {
 
 			// set up canvas to work on
 			sketchCanvas = document.createElement('canvas');
-			sketchCC = sketchCanvas.getContext('2d');
+			sketchCC = sketchCanvas.getContext('2d', { willReadFrequently: true });
 
 			sketchW = sketchCanvas.width = modelWidth + (searchWindow-1) + patchSize-1;
 			sketchH = sketchCanvas.height = modelHeight + (searchWindow-1) + patchSize-1;
@@ -14916,8 +14916,9 @@ var clm = {
 				params = pv.slice(0);
 			}
 
-			var cc = canvas.getContext('2d');
-			cc.fillStyle = 'rgb(200,200,200)';
+			var cc = canvas.getContext('2d', { willReadFrequently: true });
+            // made fillstyle for the eyes tracking transparent
+			cc.fillStyle = 'rgb(200,200,200, 0)';
             // made strokestyle transparent
 			cc.strokeStyle = 'rgb(130,255,50,0)';
 			//cc.lineWidth = 1;

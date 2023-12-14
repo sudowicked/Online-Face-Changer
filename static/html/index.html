@@ -82,7 +82,7 @@
                 position: absolute;
                 text-align : center;
                 color: #f0f0f0;
-                font-size: 20px;
+                font-size: 1.2em;
                 right:0;
                 cursor: pointer;
                 z-index: 1; /* Ensures the UI is displayed on top of other content */
@@ -897,6 +897,7 @@
 
                     // Draw the current frame from the newcanvas (where the mask and face are combined) onto the screenshot canvas
                     screenshotContext.drawImage(newcanvas, 0, 0, vid_width, vid_height);
+                    
 
                     // Convert the screenshot canvas to a data URL (base64 encoded)
                     var screenshotDataURL = screenshotCanvas.toDataURL('image/png');

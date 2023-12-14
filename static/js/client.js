@@ -270,7 +270,7 @@ async function updateImages() {
     }, {});
 
         images = images.concat(clientimages);
-        console.log('Client Images:', clientcoordinates);
+        // console.log('Client Images:', clientcoordinates);
         // Once images are updated, call the function or execute code that relies on clientimages.
         handleClientImages(images, clientcoordinates, masks);
     } catch (error) {
