@@ -116,7 +116,7 @@ function createOptionsContainer() {
 
     var menuDeleteButtons = document.querySelectorAll(".delete-button");
 
-    // Handle item selection
+    // Handle custom images deletion
     menuDeleteButtons.forEach((item, index) => {
         item.addEventListener("click", function () {
             if (containerOpen == true) {
@@ -184,7 +184,7 @@ function createOptionsContainer() {
                 selectedItem = item;
 
                 var extension = item.getAttribute('data-extension');
-                console.log(extension);
+                // console.log(selectedItem.textContent);
 
                 customScroll(item,index);
 

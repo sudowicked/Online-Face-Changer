@@ -905,7 +905,7 @@
                     // Create a link element to allow the user to download the screenshot
                     var downloadLink = document.createElement('a');
                     downloadLink.href = screenshotDataURL;
-                    downloadLink.download = 'Faceswapp.png'; // Specify the filename
+                    downloadLink.download = 'Faceswapp_' + selectedItem.textContent + '.png'; // Specify the filename
                     downloadLink.click();
                 }
 
