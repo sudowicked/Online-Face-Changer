@@ -36,13 +36,14 @@ function updateSelectWithData() {
             }
 
             // After the custom images' names have been loaded to our selectElement we create the container with the available options 
+            createOptionsContainer();
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
 }
 
-// Call the function to update the <select> element 
+// Call the function to update the <select> element when needed
 updateSelectWithData();
 
 var selectedItem;
