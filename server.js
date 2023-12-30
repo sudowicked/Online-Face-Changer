@@ -1,3 +1,4 @@
+// Declaration of required modules
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -5,10 +6,9 @@ const multer = require('multer');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 
-
 // SQLite initialization
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('clm_database.db');
+// const db = new sqlite3.Database('clm_database.db');
 
 // Create a directory to store uploaded images
 const uploadDirectory = './static/uploads';
@@ -34,7 +34,6 @@ app.use(session({
 }));
 
 // Serve static files from the "public" directory
-// sendFile will go here
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/static/html/login_register.html'));
   });
@@ -42,6 +41,7 @@ app.use(express.static(path.join(__dirname, '/static')));
 console.log(__dirname);
 app.use(express.urlencoded({ extended: true })); // Enable parsing of form data
 
+// Saltrounds variable for password hashing
 const saltRounds = 10;
 
 // Define a route to handle the form submission
@@ -62,7 +62,6 @@ app.post('/register', (req, res) => {
         } else {
             // Username is available, proceed with registration
             // Hash and store the password, insert the new user into the database, etc.
-            // ...
 
             bcrypt.hash(password, saltRounds, function(err,hash) {
 
@@ -84,19 +83,21 @@ app.post('/register', (req, res) => {
 
 });
 
+// Define a route to check if the username provided already exists in the database (called in login_register.html)
 app.post('/check-username', (req, res) => {
     const { username } = req.body;
 
     // Open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
 
-    const sql = 'SELECT * FROM users WHERE username = ?';
+    const sql = 'SELECT username FROM users WHERE username = ?';
     db.get(sql, [username], (err, row) => {
         if (err) {
             // Handle the database error, e.g., by sending a 500 Internal Server Error response
             res.status(500).json({ error: 'Database error' });
         } else {
             // If row exists, the username is taken; otherwise, it's available
+            // Using the double ! operator we essentialy assign true to the const if a row exists and false if it doesn't
             const exists = !!row;
             res.json({ exists });
         }
@@ -134,7 +135,7 @@ app.post('/login', (req, res) => {
             // You can set the user's ID in the session or handle it as needed here
             req.session.userId = userId;
 
-            // Redirect to a secured page (e.g., image upload page) or send a success response.
+            // Redirect to a secured page 
             res.redirect('/html/index.html');
             } else {
             // Passwords do not match, login failed
@@ -143,14 +144,14 @@ app.post('/login', (req, res) => {
             db.close();
         });
         } else {
-        // User not found
-        res.redirect('/html/failed_login.html');
-        db.close();
+            // User not found
+            res.redirect('/html/failed_login.html');
+            db.close();
         }
     });
 });
 
-
+// Define a route to handle image uploads 
 app.post('/upload', upload.single('image'), (req, res) => {
     var { originalname } = req.file;
 
@@ -171,7 +172,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
                     res.send(`
                     <script>
                         alert('Warning: An image with this filename already exists. Please choose a different image.');
-                        window.location.href = './html/index.html'; // Redirect to the original page if needed
+                        window.location.href = './html/index.html'; // Redirect to the original page 
                     </script>
                 `);
                 } else {
@@ -182,26 +183,25 @@ app.post('/upload', upload.single('image'), (req, res) => {
                             console.error(insertErr.message);
                             res.send('Image upload failed.');
                         } else {
+                            // Redirect to the annotater page passing the image filename as a query parameter
                             res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
                         }
                     });
                 }
             }
         });
-    } else {
+    } 
+    else {
         // User is not logged in; handle this case.
         res.send('User is not logged in.');
     }
 });
 
-
+// Define a route to add the coordinates from the image annotation to the database (called in annotater.js)
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
     const originalname = req.query.image_id;
     if (req.session.userId) {
-        // User is logged in; you can now use req.session.userId for image uploads.
-
-        // Insert the image information along with the user ID into the database.
         const db = new sqlite3.Database('clm_database.db'); 
 
         const sql = 'UPDATE user_images SET coordinates = ? WHERE user_id = ? AND filename = ?';
@@ -212,26 +212,21 @@ app.get('/setCoordinates', (req, res) => {
             } 
             else {
                 res.redirect('/html/index.html');
-                
             }
-        })
-                
+        })          
     }
     
     else {
         // User is not logged in; handle this case.
         res.send('User is not logged in.');
     }
-    
 
-  });
+});
 
+// Define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js)
 app.get('/discardUpload', (req, res) => {
     const originalname = req.query.image_id;
     if (req.session.userId) {
-        // User is logged in; you can now use req.session.userId for image uploads.
-
-        // Insert the image information along with the user ID into the database.
         const db = new sqlite3.Database('clm_database.db'); 
 
         const sql = 'DELETE FROM user_images WHERE user_id = ? AND filename = ?';
@@ -241,11 +236,9 @@ app.get('/discardUpload', (req, res) => {
                 res.send('Discard upload failed.');
             } 
             else {
-                res.redirect('/html/index.html');
-                
+                res.redirect('/html/index.html'); 
             }
-        })
-                
+        })          
     }
     
     else {
@@ -255,6 +248,7 @@ app.get('/discardUpload', (req, res) => {
     
   }); 
 
+// Define a route to fetch the images' names from the database (called in client.js)
 app.get('/getSelectData', (req, res) => {
     const db = new sqlite3.Database('clm_database.db');
     // Fetch data from the database 
@@ -268,25 +262,22 @@ app.get('/getSelectData', (req, res) => {
         
         else if (rows && rows.length > 0) {
         
+            // Extracting the filename without the extension which will be displayed in index.html as an option
             const customImagesNames = rows.map((row) => path.parse(row.filename).name);
+            // Extracting the full filename with extensions which will later be set as an attribute for each image
             const extensions = rows.map((row) => row.filename);
-                    
-            const selectData = customImagesNames;
 
             // Create an object with both arrays
             const responseData = {
-                selectData: selectData,
+                selectData: customImagesNames,
                 imageExtensions: extensions
             };
-
-            
-            // console.log(customImagesNames);
-            // const selectData = ["Option 1", "Option 2", "Option 3"];
-                            
+ 
             // Send the data as JSON in the response
             res.json(responseData);
             }  
         else {
+            // Handling the JSON response in the case the user hasn't uploaded any custom images
             const selectData = [];
             const extensions = [];
             const responseData = {
@@ -296,19 +287,13 @@ app.get('/getSelectData', (req, res) => {
             res.json(responseData);
         }
                        
-        })
-        
-    //const selectData = ["Option 1", "Option 2", "Option 3"];
-    
-    // Send the data as JSON in the response
+    })
 
 });  
 
-// Define a route to fetch image data
+// Define a route to fetch image data from the database (called in client.js)
 app.get('/getImages', (req, res) => {
-    // Fetch image data from your database or other source
-    
-    const db = new sqlite3.Database('clm_database.db'); // Replace with your SQLite database file
+    const db = new sqlite3.Database('clm_database.db'); 
     // Fetch data from the database (replace with your own logic)
     userId = req.session.userId;
     const sql = 'SELECT filename, coordinates FROM user_images WHERE user_id = ?';
@@ -316,7 +301,9 @@ app.get('/getImages', (req, res) => {
         if (err) {
             console.error('Error fetching custom images:', err);
             res.status(500).send('Internal Server Error');
-        }   else if (rows && rows.length > 0) {
+        }   
+        else if (rows && rows.length > 0) {
+            // Define the image directory
             const image_url = "../uploads/";
         
             // Map rows to the desired format
@@ -329,10 +316,10 @@ app.get('/getImages', (req, res) => {
             res.json(imageData);
             }
         else {
+            // Handling the JSON response in the case the user hasn't uploaded any custom images
             const imageData = [];
             res.json(imageData);
-        };
-                       
+        };               
     })
 
 });

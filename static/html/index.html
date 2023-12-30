@@ -887,31 +887,35 @@
 
                 // Function to capture a screenshot
                 function captureScreenshot() {
-                    // Create a new canvas to hold the screenshot
-                    var screenshotCanvas = document.createElement('canvas');
-                    screenshotCanvas.width = vid_width; // Use the same width as the video
-                    screenshotCanvas.height = vid_height; // Use the same height as the video
+                // Create a new canvas to hold the screenshot
+                var screenshotCanvas = document.createElement('canvas');
+                screenshotCanvas.width = vid_width; // Use the same width as the video
+                screenshotCanvas.height = vid_height; // Use the same height as the video
 
-                    // Get the 2D rendering context of the screenshot canvas
-                    var screenshotContext = screenshotCanvas.getContext('2d', { willReadFrequently: true });
+                // Get the 2D rendering context of the screenshot canvas
+                var screenshotContext = screenshotCanvas.getContext('2d');
 
-                    // Draw the current frame from the newcanvas (where the mask and face are combined) onto the screenshot canvas
+                // Introduce a slight delay before capturing the screenshot
+                setTimeout(function () {
+                    // Draw the current frame from the newcanvas onto the screenshot canvas
                     screenshotContext.drawImage(newcanvas, 0, 0, vid_width, vid_height);
-                    
 
                     // Convert the screenshot canvas to a data URL (base64 encoded)
                     var screenshotDataURL = screenshotCanvas.toDataURL('image/png');
 
+                    // Get the name of the currently selected image mask
+                    var selectedImage = selectElement.options[currentMask];
+                    var selectedImageName = selectedImage.textContent;
+
                     // Create a link element to allow the user to download the screenshot
                     var downloadLink = document.createElement('a');
                     downloadLink.href = screenshotDataURL;
-                    downloadLink.download = 'Faceswapp_' + selectedItem.textContent + '.png'; // Specify the filename
+                    downloadLink.download = 'Faceswapp_' + selectedImageName + '.png'; // Specify the filename
                     downloadLink.click();
-                }
+                }, 1000); // Adjust the delay time as needed (in milliseconds)
+            }
 
             </script>
-
-
            
         </div>
     </body>

@@ -310,20 +310,21 @@
     <script>
         // JavaScript function to check username availability
         function checkUsernameAvailability() {
-        const username = document.getElementById('register_username').value;
-        
-    
-        // Send an AJAX request to the server to check if the username exists
-        fetch('/check-username', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: username }),
-        })
+            const username = document.getElementById('register_username').value;
+            
+            // Send an AJAX request to the server to check if the username exists
+            fetch('/check-username', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            })
             .then((response) => response.json())
             .then((data) => {
+
             const messageArea = document.getElementById('usernameAvailability');
+
             if (data.exists) {
                 // Create a p element with the ⚠️ symbol
                 const paragraph = document.createElement('p');
@@ -344,7 +345,7 @@
             });
         }
     
-        // Add an event listener to the username input field
+        // Add an event listener to the username input field to display the availability of the username
         const registerUsernameInput = document.getElementById('register_username');
         registerUsernameInput.addEventListener('input', checkUsernameAvailability);
     </script>

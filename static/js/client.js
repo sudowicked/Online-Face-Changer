@@ -1,6 +1,6 @@
-// Function to update the <select> element with data from the server
 var option_value = 17;
 
+// Function to update the <select> element with data from the server
 function updateSelectWithData() {
     // Make a request to the server route
     fetch('/getSelectData')
@@ -10,9 +10,6 @@ function updateSelectWithData() {
 
             const selectData = data.selectData;
             const imageExtensions = data.imageExtensions;
-            
-            // Clear existing options
-            // selectElement.innerHTML = '';
 
             // Add new options based on the data
 
@@ -20,17 +17,17 @@ function updateSelectWithData() {
                 selectData.forEach((optionText, index) => {
                     const extension = imageExtensions[index];
                     
-                    // Capitalize the first letter of optionText
+                    // Capitalize the first letter of optionText to match the format
                     var capitalizedText = optionText.charAt(0).toUpperCase() + optionText.slice(1);
     
                     const option = document.createElement('option');
                     option.text = capitalizedText;
-    
-                    option.setAttribute('data-extension', extension); // Set the extension as a data attribute
                     
-    
+                    // Set the extension as a data attribute to each option
+                    option.setAttribute('data-extension', extension); 
+                    
+                    // Adding a value to each option starting from 17 as there are already 17 included images in the app
                     option.value = option_value;
-                    // console.log(option.value);
                     option_value += 1;
     
                     selectElement.appendChild(option);
@@ -38,14 +35,14 @@ function updateSelectWithData() {
                 });
             }
 
-            createOptionsContainer();
+            // After the custom images' names have been loaded to our selectElement we create the container with the available options 
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
 }
 
-// Call the function to update the <select> element when needed
+// Call the function to update the <select> element 
 updateSelectWithData();
 
 var selectedItem;
@@ -90,7 +87,7 @@ function createOptionsContainer() {
             optionContainer.appendChild(newOption);
 
             if (i >= 17) {
-                // Create a delete button
+                // Create a delete button for uploaded images
                 var deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete-button');
                 deleteButton.textContent = 'delete';
