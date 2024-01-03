@@ -584,7 +584,6 @@
 
                 function updateMask(el) {
                     currentMask = parseInt(el.target.value, 10);
-                    console.log(currentMask);
                     var positions = ctrack.getCurrentPosition();
                     if (positions) {
                         switchMasks(positions);
@@ -834,30 +833,6 @@
                 }
                 startVideoFunction();
                 
-            </script>
-
-            <script>
-    
-                // Define a variable to store the current mask index
-                var currentMask = selectElement.selectedIndex; // Initialize with the default selected index
-
-                function debounce(func, wait) {
-                    var timeout;
-                    return function () {
-                        const context = this;
-                        const args = arguments;
-                        clearTimeout(timeout);
-                        timeout = setTimeout(() => func.apply(context, args), wait);
-                    };
-                }
-
-                selectElement.addEventListener("change", debounce(function () {
-                    var positions = ctrack.getCurrentPosition();
-                    if (positions) {
-                        switchMasks(positions);
-                    }
-                }, 300)); 
-
             </script>
 
             <script>

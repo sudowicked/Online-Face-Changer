@@ -294,7 +294,6 @@ app.get('/getSelectData', (req, res) => {
 // Define a route to fetch image data from the database (called in client.js)
 app.get('/getImages', (req, res) => {
     const db = new sqlite3.Database('clm_database.db'); 
-    // Fetch data from the database (replace with your own logic)
     userId = req.session.userId;
     const sql = 'SELECT filename, coordinates FROM user_images WHERE user_id = ?';
     db.all(sql, [req.session.userId], (err, rows) => {

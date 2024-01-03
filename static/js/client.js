@@ -47,90 +47,80 @@ function updateSelectWithData() {
 updateSelectWithData();
 
 var selectedItem;
-const maxVisibleItems = 5; // Set the maximum visible items
+const maxVisibleItems = 5; // Set the maximum visible items for the container
 
 // Function to create the optionsContainer based on the updated selectmask
 function createOptionsContainer() {
     const optionsContainer = document.querySelector(".options-container");
-    // const selectElement = document.getElementById("selectmask");
 
-    var do_once = false;
-    if (!do_once) {
-        do_once = true;
+    // Get the index of the current image mask which is set randomly in index.html
+    var currentMask = selectElement.selectedIndex;
 
-        var currentMask = selectElement.selectedIndex;
+    // Iterate over the options in the select element
+    for (let i = 0; i < selectElement.options.length; i++) {
+        var option = selectElement.options[i];
 
-        // Iterate over the options in the select element
-        for (let i = 0; i < selectElement.options.length; i++) {
-            var option = selectElement.options[i];
+        // Create a new container element for each option
+        var optionContainer = document.createElement('div');
+        optionContainer.classList.add('option-container');
 
-            // Create a new container element for each option
-            var optionContainer = document.createElement('div');
-            optionContainer.classList.add('option-container');
+        // Create a new span element for each option
+        var newOption = document.createElement('span');
 
-            // Create a new span element for each option
-            var newOption = document.createElement('span');
+        newOption.classList.add('menu-item');
+        newOption.textContent = option.textContent;
 
-            newOption.classList.add('menu-item');
-            newOption.textContent = option.textContent;
-
-            var extension = option.getAttribute('data-extension');
-            newOption.setAttribute('option-extension', extension);
+        var extension = option.getAttribute('data-extension');
+        newOption.setAttribute('option-extension', extension);
 
 
-            // Add a "data-selected" attribute to the focused item
-            if (i === currentMask) {
-                newOption.setAttribute('data-selected', 'true');
-            }
-
-
-            // Append the new span and deleteButton elements to the container
-            optionContainer.appendChild(newOption);
-
-            if (i >= 17) {
-                // Create a delete button for uploaded images
-                var deleteButton = document.createElement('button');
-                deleteButton.classList.add('delete-button');
-                deleteButton.textContent = 'delete';
-
-                deleteButton.style.fontFamily = '"Material Symbols Outlined", sans-serif';
-
-                // console.log(extension);
-
-                optionContainer.appendChild(deleteButton);
-            }
-
-
-            // Append the container to the optionsContainer
-            optionsContainer.appendChild(optionContainer);
+        // Add a "data-selected" attribute to the focused item
+        if (i === currentMask) {
+            newOption.setAttribute('data-selected', 'true');
         }
 
+        // Append the new span and deleteButton elements to the container
+        optionContainer.appendChild(newOption);
+
+        if (i >= 17) {
+            // Create a delete button for custom uploaded images
+            var deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = 'delete';
+
+            deleteButton.style.fontFamily = '"Material Symbols Outlined", sans-serif';
+
+            optionContainer.appendChild(deleteButton);
+        }
+
+        // Append the container to the optionsContainer
+        optionsContainer.appendChild(optionContainer);
+
+    }    
+    
         // Get the selected item using the attribute selector
         selectedItem = document.querySelector('.menu-item[data-selected="true"]');
 
         // Scroll the selected item into view
         selectedItem.scrollIntoView({ behavior: 'smooth' });
-    }
+
 
     var menuDeleteButtons = document.querySelectorAll(".delete-button");
 
-    // Handle custom images deletion
+    // Handle the custom images deletion
     menuDeleteButtons.forEach((item, index) => {
         item.addEventListener("click", function () {
             if (containerOpen == true) {
-                // Remove the "data-selected" attribute from the previously selected item
+                // Accessing the image we want to delete by using the index in menuItems and adding 17 so we skip the already existing images which have no delete option
                 var menuItem = menuItems.item(index+17);
                 var itemExtension = menuItem.getAttribute('option-extension');
-
-                // Use the retrieved value as needed
-                // console.log('Menu item extension:', itemExtension);
 
                 window.location.href = `/discardUpload?image_id=${encodeURIComponent(itemExtension)}`;
             }
         });
     });
 
-    // Add a click event listener to the document
+    // Code to close the container when the user clicks anywhere on the page and automatically scroll to the selected option
     document.addEventListener('click', (event) => {
         const isClickInsideContainer = optionsContainer.contains(event.target);
         if (!isClickInsideContainer) {
@@ -149,14 +139,13 @@ function createOptionsContainer() {
 
     var containerOpen = false;
 
+    // Code to open/close the container displaying the available images
     optionsContainer.addEventListener('click', (event) => {
         event.stopPropagation();
         if (optionsContainer.style.maxHeight) {
             optionsContainer.style.maxHeight = null; // Close the container
             optionsContainer.style.overflowY = 'hidden';
             containerOpen = false;
-            // Automatically scroll to the top
-            // optionsContainer.scrollTop = 0;
         } else {
             const totalHeight = optionsContainer.scrollHeight;
             const visibleHeight = maxVisibleItems * (totalHeight / optionsContainer.children.length);
@@ -168,7 +157,7 @@ function createOptionsContainer() {
         
     var menuItems = document.querySelectorAll(".menu-item");
     
-    // Handle item selection
+    // Handle image mask selection
     menuItems.forEach((item, index) => {
         item.addEventListener("click", function () {
             if (containerOpen == true) {
@@ -181,22 +170,20 @@ function createOptionsContainer() {
                 item.setAttribute('data-selected', 'true');
                 selectedItem = item;
 
-                var extension = item.getAttribute('data-extension');
-                // console.log(selectedItem.textContent);
-
                 customScroll(item,index);
 
                 currentMask = index;
                 selectElement.selectedIndex = currentMask;
+                
                 selectElement.dispatchEvent(new Event("change"));
             }
         });
     });
 
 
+    // Custom scrolling function with a delay if the selected image is in the last five as it wouldn't scroll without it
     function customScroll(item, index) {
         if (index >= optionsContainer.children.length - maxVisibleItems) {
-            //optionsContainer.scrollTop = 6;
             setTimeout(() => {
                 item.scrollIntoView({ behavior: 'smooth' });
             }, 400);
