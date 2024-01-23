@@ -1,0 +1,1 @@
+A face changer web application heavily based on <a href="https://www.auduno.com/clmtrackr/examples/facesubstitution.html"> Face Substitution Example </a> created by <a href="https://github.com/auduno"> auduno </a> using the <a href="https://github.com/auduno/clmtrackr"> Clmtrackr </a> library.
