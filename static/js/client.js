@@ -1,6 +1,6 @@
 var option_value = 17;
 
-// Function to update the <select> element with data from the server
+// Asynchronous function to update the <select> element with data from the server
 function updateSelectWithData() {
     // Make a request to the server route
     fetch('/getSelectData')
@@ -98,11 +98,11 @@ function createOptionsContainer() {
 
     }    
     
-        // Get the selected item using the attribute selector
-        selectedItem = document.querySelector('.menu-item[data-selected="true"]');
+    // Get the selected item using the attribute selector
+    selectedItem = document.querySelector('.menu-item[data-selected="true"]');
 
-        // Scroll the selected item into view
-        selectedItem.scrollIntoView({ behavior: 'smooth' });
+    // Scroll the selected item into view
+    selectedItem.scrollIntoView({ behavior: 'smooth' });
 
 
     var menuDeleteButtons = document.querySelectorAll(".delete-button");
@@ -175,13 +175,14 @@ function createOptionsContainer() {
                 currentMask = index;
                 selectElement.selectedIndex = currentMask;
                 
+                // This line is crucial as it is responsible for actually changing the image mask by calling the event listener for when the selectmask changes
                 selectElement.dispatchEvent(new Event("change"));
             }
         });
     });
 
 
-    // Custom scrolling function with a delay if the selected image is in the last five as it wouldn't scroll without it
+    // Custom scrolling function with a delay if the selected image is in the last five options
     function customScroll(item, index) {
         if (index >= optionsContainer.children.length - maxVisibleItems) {
             setTimeout(() => {
@@ -196,17 +197,17 @@ function createOptionsContainer() {
     var arrowUp = document.getElementById("arrow-up");
     var arrowDown = document.getElementById("arrow-down");
 
+    // Function for changing the image mask using the arrows with the same logic as when selecting each option by the container
     function arrowsUpdateAndScroll(index) {
         currentMask = index;
         selectElement.selectedIndex = currentMask;
         selectElement.dispatchEvent(new Event("change"));
-        menuItems.forEach((item, index) => {
-            if (index === currentMask) {
-                item.scrollIntoView({ behavior: "smooth" });
-            }
-        });
+
+        var selectedItem = menuItems.item(index);
+        selectedItem.scrollIntoView({ behavior: "smooth" });
     }
     
+    // Event for when arrowDown is clicked
     arrowDown.addEventListener("click", function () {
         if (currentMask < selectElement.options.length - 1) {
             currentMask++;
@@ -216,7 +217,7 @@ function createOptionsContainer() {
         arrowsUpdateAndScroll(currentMask);
     });
     
-    // Similar logic for arrowUp
+    // Same logic with arrowDown
     arrowUp.addEventListener("click", function () {
         if (currentMask > 0) {
             currentMask--;
@@ -228,36 +229,35 @@ function createOptionsContainer() {
     
 }
 
-
-
 var clientimages = [];
 var clientcoordinates = [];
 
-// Function to update the images array in index.html
+// Asynchronous function to update the images array in index.html
 async function updateImages() {
     try {
         const response = await fetch('/getImages');
         const data = await response.json();
-        const clientimages = data.map((item) => ({
+
+        const clientImages = data.map((item) => ({
             id: item.id,
             path: item.path
         }));
 
-      const clientcoordinates = data.reduce((acc, item) => {
-        // Assuming that item.id contains the key (e.g., "audrey")
-        const key = item.id;
-        const coordinates = JSON.parse(item.coordinates);
-        
-        // Assign the coordinates array to the key in the accumulator object
-        acc[key] = coordinates;
-        
-        return acc;
-    }, {});
+        const imageCoordinates = data.reduce((acc, item) => {
+            // Assuming that item.id contains the key (e.g., "audrey")
+            const key = item.id;
+            const coordinates = JSON.parse(item.coordinates);
+            
+            // Assign the coordinates array to the key in the accumulator object
+            acc[key] = coordinates;
+            
+            return acc;
+        }, {});
 
-        images = images.concat(clientimages);
-        // console.log('Client Images:', clientcoordinates);
-        // Once images are updated, call the function or execute code that relies on clientimages.
-        handleClientImages(images, clientcoordinates, masks);
+        images = images.concat(clientImages);
+
+        // Once images are updated, call the function within index.html that relies on clientimages
+        handleClientImages(imageCoordinates);
     } catch (error) {
         console.error('Error fetching image data:', error);
     }

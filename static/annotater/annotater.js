@@ -97,34 +97,6 @@ function addCustomImageToFiles(imagePath) {
 }
 
 
-// set up html webstorage for variables
-
-function supports_html5_storage() {
-	try {
-		return 'localStorage' in window && window['localStorage'] !== null;
-	} catch (e) {
-		return false;
-	}
-}
-
-if (!supports_html5_storage()) {
-	alert('HTML5 storage is not supported in this browser.');
-}
-
-function storeCurrent() {
-	var coordinates = getParameters();
-	// divide by scale
-	for (var i = 0;i < coordinates.length;i++) {
-		coordinates[i][0][0] /= scale;
-		coordinates[i][0][1] /= scale;
-	}
-	var fileName = fileList[fileIndex].name;
-	var stringCoordinates = JSON.stringify(coordinates);
-	localStorage.setItem(fileName, stringCoordinates);
-}
-
-
-
 // set up d3 stuff
 function clear() {
 	document.getElementById('vis').innerHTML = "";
@@ -192,7 +164,7 @@ function setup(positions, toggle, w, h) {
 		.on("dragend", function() {
 			delete this.__origin__;
 			vis.selectAll("circle.control").style("cursor","auto");
-			storeCurrent();
+			// storeCurrent();
 		}));
 				
 	vis.selectAll("circle.control")
@@ -285,21 +257,6 @@ function getCoordinates() {
 	cs += "]";
 	return cs;
 }
-
-function getRawCoordinates() {
-	var coordinates;
-	vis.selectAll("g").each(function(d) {coordinates = d;});
-	
-	return coordinates;
-}
-
-function toggleDisplay() {
-	// TODO
-};
-
-function toggleText() {
-	// TODO
-};
 
 function renderPoints(points, w, h) {
 	clear();
@@ -460,42 +417,6 @@ function estimatePositions(box) {
 	}
 	
 	return curpoints;
-}
-
-
-// manual selection of faces (with jquery imgareaselect plugin)
-function selectBox() {
-	clear();
-	$('#imgcanvas').imgAreaSelect({
-		handles : true,
-		onSelectEnd : function(img, selection) {
-			// create box
-			var box = [selection.x1, selection.y1, selection.width, selection.height];
-			// do fitting
-			positions = estimatePositions(box);
-			if (!positions) {
-				clear();
-				return false;
-			}
-			// put boundary on estimated points
-			for (var i = 0;i < positions.length;i++) {
-				if (positions[i][0][0] > img.width) {
-					positions[i][0][0] = img.width;
-				} else if (positions[i][0][0] < 0) {
-					positions[i][0][0] = 0;
-				}
-				if (positions[i][0][1] > img.height) {
-					positions[i][0][1] = img.height;
-				} else if (positions[i][0][1] < 0) {
-					positions[i][0][1] = 0;
-				}
-			}
-			// render points
-			renderPoints(positions, img.width, img.height);
-			storeCurrent();
-		},
-		autoHide : true
-	});
 }
 
 function exportToString() {

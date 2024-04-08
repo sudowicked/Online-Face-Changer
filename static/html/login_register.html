@@ -1,354 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login or Register</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro');
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login or Register</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro');
 
-        *{
-        margin: 0px;
-        padding: 0px;
-        }
-      
-
-        body {
-            font-family: 'Crimson Pro', sans-serif; 
-            text-align: center;
-            background: rgba(255, 255, 255, 0);
-            font-size: 18px;
-        }
-        .container {
-        position: relative;
-        z-index: 1; /* Ensure the container is above the animated background */
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 10px;
-            background-color: #4e54c800;
-            border-radius: 5px;
-            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-            position: relative;
-            z-index: 2; /* Ensure the login container is above the animated background */
-        }
-        h1 {
-            color: black;
-            margin-bottom: 20px;
-            margin-top: 50px;
-        }
-        .form-group {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            color:#000000;
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+            *{
+                margin: 0px;
+                padding: 0px;
+            }
         
-        input[type="text"],
-        input[type="password"] {
-            width: 50%;
-            padding: 10px;
-            border: 2px solid #000000;
-            border-radius: 5px; 
-        }
-        input:focus { 
-            outline: none;
-        }
 
+            body {
+                font-family: 'Crimson Pro', sans-serif; 
+                text-align: center;
+                background: rgba(255, 255, 255, 0);
+                font-size: 18px;
+            }
+            .container {
+                position: relative;
+                z-index: 1; /* Ensure the container is above the animated background */
+            }
 
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color:  #8f94fb;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        .btn:hover {
-            background-color: #AE86AF;
-        }
-
-        .href-link {
-            color: #8f94fb;
-            text-decoration: none;
-            font-style: italic;
-            font-family: 'Crimson Pro', sans-serif;
-        }
-        .href-link:hover {
-            color: #AE86AF;
-        }
-
-        .error-message {
-            color:  #8f94fb;
-            font-family: 'Crimson Pro', sans-serif;
-            font-style: italic;
-            font-size: 18px;
-        }
-
-        .warning-symbol {
-            color:  #8f94fb;
-            font-family: 'Crimson Pro', sans-serif;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .area {
-        background: #4e54c8;  
-        background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);  
-        position: absolute; /* Position the background absolutely */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0; /* Place the background behind the container */
-        /* ... other styles ... */
-        }
-
-        .circles{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .circles li{
-            position: absolute;
-            display: block;
-            list-style: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            animation: animate 25s linear infinite;
-            bottom: -150px;
-            /* background-image: url('../51-merchant-6-registration.png'); /* Replace 'path_to_your_image.jpg' with your image file path */
-            background-size: cover;
-            background-position: center center;
-            transform-origin: center; /* Center the rotation */
-            transform-style: preserve-3d; /* Enable 3D transformations */
-            transform: translateZ(40px);
+            .login-container {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 10px;
+                background-color: #4e54c800;
+                border-radius: 5px;
+                position: relative;
+                z-index: 2; /* Ensure the login container is above the animated background */
+            }
+            h1 {
+                color: black;
+                margin-bottom: 20px;
+                margin-top: 50px;
+            }
+            .form-group {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            label {
+                color:#000000;
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
             
-        }
-
-        .circles li:nth-child(1){
-            left: 25%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 0s;
-        }
-
-
-        .circles li:nth-child(2){
-            left: 10%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 2s;
-            animation-duration: 12s;
-        }
-
-        .circles li:nth-child(3){
-            left: 70%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 4s;
-        }
-
-        .circles li:nth-child(4){
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: 18s;
-        }
-
-        .circles li:nth-child(5){
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
-        }
-
-        .circles li:nth-child(6){
-            left: 75%;
-            width: 110px;
-            height: 110px;
-            animation-delay: 3s;
-        }
-
-        .circles li:nth-child(7){
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 7s;
-        }
-
-        .circles li:nth-child(8){
-            left: 50%;
-            width: 25px;
-            height: 25px;
-            animation-delay: 15s;
-            animation-duration: 45s;
-        }
-
-        .circles li:nth-child(9){
-            left: 20%;
-            width: 15px;
-            height: 15px;
-            animation-delay: 2s;
-            animation-duration: 35s;
-        }
-
-        .circles li:nth-child(10){
-            left: 85%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 0s;
-            animation-duration: 11s;
-        }
-
-        @keyframes animate {
-
-            0%{
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-                border-radius: 0;
+            input[type="text"],
+            input[type="password"] {
+                width: 50%;
+                padding: 10px;
+                border: 2px solid #000000;
+                border-radius: 5px; 
+            }
+            input:focus { 
+                outline: none;
             }
 
-            100%{
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%;
+
+            .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color:  #8f94fb;
+                color: #fff;
+                text-decoration: none;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+            .btn:hover {
+                background-color: #AE86AF;
             }
 
-        }
-    </style>
-</head>
+            .href-link {
+                color: #8f94fb;
+                text-decoration: none;
+                font-style: italic;
+                font-family: 'Crimson Pro', sans-serif;
+            }
+            .href-link:hover {
+                color: #AE86AF;
+            }
 
-<body>   
-    <div class="container">
-        <div class="login-container">
-            <h1 id="heading">Login</h1>
-            <div id="loginForm">
-                <form action="/login" method="POST">
-                    <div class="form-group">
-                        <label for="login_username">Username:</label>
-                        <input type="text" id="login_username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login_password">Password:</label>
-                        <input type="password" id="login_password" name="password" required>
-                    </div>
-                    <button class="btn" type="submit">Login</button>
-                    <h4>Don't have an account? <a href="#" class='href-link' id="showRegister">Register</a></h4>
-                </form>
-            </div>
-            <div id="registerForm" style="display: none;">
-                <form action="/register" method="POST">
-                    <div class="form-group">
-                        <label for="regiser_username">Username:</label>
-                        <input type="text" id="register_username" name="username" required>
-                        <!-- Add an empty <p> element for displaying the username availability message -->
-                        <div id="usernameAvailability"> </div> 
-                    </div>
-                    <div class="form-group">
-                        <label for="register_password">Password:</label>
-                        <input type="password" id="register_password" name="password" required minlength="6">
-                    </div>
-                    <button class="btn" type="submit" id="register_button">Register</button>
-                    <h4>Already have an account? <a href="#" class='href-link' id="showLogin">Login</a></h4>
-                </form>
+            .error-message {
+                color:  #8f94fb;
+                font-family: 'Crimson Pro', sans-serif;
+                font-style: italic;
+                font-size: 18px;
+            }
+
+            .warning-symbol {
+                color:  #8f94fb;
+                font-family: 'Crimson Pro', sans-serif;
+                text-decoration: none;
+                font-size: 18px;
+            }
+
+            .area {
+                background: #4e54c8;  
+                background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);  
+                position: absolute; /* Position the background absolutely */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0; /* Place the background behind the container */
+            }
+
+
+            /* CSS background taken from https://codepen.io/mohaiman/pen/MQqMyo */
+
+            .circles{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            .circles li{
+                position: absolute;
+                display: block;
+                list-style: none;
+                width: 20px;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.2);
+                animation: animate 25s linear infinite;
+                bottom: -150px;
+                background-size: cover;
+                background-position: center center;
+                transform-origin: center; /* Center the rotation */
+                transform-style: preserve-3d; /* Enable 3D transformations */
+                transform: translateZ(40px);
+                
+            }
+
+            .circles li:nth-child(1){
+                left: 25%;
+                width: 80px;
+                height: 80px;
+                animation-delay: 0s;
+            }
+
+
+            .circles li:nth-child(2){
+                left: 10%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 2s;
+                animation-duration: 12s;
+            }
+
+            .circles li:nth-child(3){
+                left: 70%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 4s;
+            }
+
+            .circles li:nth-child(4){
+                left: 40%;
+                width: 60px;
+                height: 60px;
+                animation-delay: 0s;
+                animation-duration: 18s;
+            }
+
+            .circles li:nth-child(5){
+                left: 65%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 0s;
+            }
+
+            .circles li:nth-child(6){
+                left: 75%;
+                width: 110px;
+                height: 110px;
+                animation-delay: 3s;
+            }
+
+            .circles li:nth-child(7){
+                left: 35%;
+                width: 150px;
+                height: 150px;
+                animation-delay: 7s;
+            }
+
+            .circles li:nth-child(8){
+                left: 50%;
+                width: 25px;
+                height: 25px;
+                animation-delay: 15s;
+                animation-duration: 45s;
+            }
+
+            .circles li:nth-child(9){
+                left: 20%;
+                width: 15px;
+                height: 15px;
+                animation-delay: 2s;
+                animation-duration: 35s;
+            }
+
+            .circles li:nth-child(10){
+                left: 85%;
+                width: 150px;
+                height: 150px;
+                animation-delay: 0s;
+                animation-duration: 11s;
+            }
+
+            @keyframes animate {
+
+                0%{
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                    border-radius: 0;
+                }
+
+                100%{
+                    transform: translateY(-1000px) rotate(720deg);
+                    opacity: 0;
+                    border-radius: 50%;
+                }
+
+            }
+        </style>
+    </head>
+
+    <body>   
+        <div class="container">
+            <div class="login-container">
+                <h1 id="heading">Login</h1>
+                <div id="loginForm">
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="login_username">Username:</label>
+                            <input type="text" id="login_username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login_password">Password:</label>
+                            <input type="password" id="login_password" name="password" required>
+                        </div>
+                        <button class="btn" type="submit">Login</button>
+                        <h4>Don't have an account? <a href="#" class='href-link' id="showRegister">Register</a></h4>
+                    </form>
+                </div>
+                <div id="registerForm" style="display: none;">
+                    <form action="/register" method="POST">
+                        <div class="form-group">
+                            <label for="register_username">Username:</label>
+                            <input type="text" id="register_username" name="username" required>
+                            <!-- Add an empty <p> element for displaying the username availability message -->
+                            <div id="usernameAvailability"> </div> 
+                        </div>
+                        <div class="form-group">
+                            <label for="register_password">Password:</label>
+                            <input type="password" id="register_password" name="password" required minlength="6">
+                        </div>
+                        <button class="btn" type="submit" id="register_button">Register</button>
+                        <h4>Already have an account? <a href="#" class='href-link' id="showLogin">Login</a></h4>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="area" >
-        <ul class="circles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-        </ul>
-    </div >
-      
-    <script>
-        const heading =  document.getElementById('heading');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const showRegisterLink = document.getElementById('showRegister');
-        const showLoginLink = document.getElementById('showLogin');
+        <div class="area" >
+            <ul class="circles">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+            </ul>
+        </div >
+        
+        <script>
+            const heading =  document.getElementById('heading');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const showRegisterLink = document.getElementById('showRegister');
+            const showLoginLink = document.getElementById('showLogin');
 
-        showRegisterLink.addEventListener('click', () => {
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-            heading.textContent = 'Register';
-        });
-
-        showLoginLink.addEventListener('click', () => {
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-            heading.textContent = 'Login';
-        });
-    </script>
-
-    <script>
-        // JavaScript function to check username availability
-        function checkUsernameAvailability() {
-            const username = document.getElementById('register_username').value;
-            
-            // Send an AJAX request to the server to check if the username exists
-            fetch('/check-username', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: username }),
-            })
-            .then((response) => response.json())
-            .then((data) => {
-
-            const messageArea = document.getElementById('usernameAvailability');
-
-            if (data.exists) {
-                // Create a p element with the ⚠️ symbol
-                const paragraph = document.createElement('p');
-                paragraph.innerHTML = '<span class="warning-symbol">⚠️</span> <span class = "error-message"> Username is already taken </span>';
-
-                // Add the paragraph to the messageArea
-                messageArea.innerHTML = ''; // Clear any previous content
-                messageArea.appendChild(paragraph);
-
-                document.getElementById('register_button').disabled = true;
-            } else {
-                messageArea.textContent = '';
-                document.getElementById('register_button').disabled = false;
-            }
-            })
-            .catch((error) => {
-            console.error('Error:', error);
+            showRegisterLink.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                heading.textContent = 'Register';
             });
-        }
-    
-        // Add an event listener to the username input field to display the availability of the username
-        const registerUsernameInput = document.getElementById('register_username');
-        registerUsernameInput.addEventListener('input', checkUsernameAvailability);
-    </script>
 
-</body>
+            showLoginLink.addEventListener('click', () => {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                heading.textContent = 'Login';
+            });
+        </script>
+
+        <script>
+            // JavaScript function to check username availability
+            function checkUsernameAvailability() {
+                const username = document.getElementById('register_username').value;
+                
+                // Send an AJAX request to the server to check if the username exists
+                fetch('/check-username', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+
+                const messageArea = document.getElementById('usernameAvailability');
+
+                if (data.exists) {
+                    // Create a p element with the ⚠️ symbol
+                    const paragraph = document.createElement('p');
+                    paragraph.innerHTML = '<span class="warning-symbol">⚠️</span> <span class = "error-message"> Username is already taken </span>';
+
+                    // Add the paragraph to the messageArea
+                    messageArea.innerHTML = ''; // Clear any previous content
+                    messageArea.appendChild(paragraph);
+
+                    document.getElementById('register_button').disabled = true;
+                } else {
+                    messageArea.textContent = '';
+                    document.getElementById('register_button').disabled = false;
+                }
+                })
+                .catch((error) => {
+                console.error('Error:', error);
+                });
+            }
+        
+            // Add an event listener to the username input field to display the availability of the username
+            const registerUsernameInput = document.getElementById('register_username');
+            registerUsernameInput.addEventListener('input', checkUsernameAvailability);
+        </script>
+
+    </body>
 </html>

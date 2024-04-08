@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 
 // SQLite initialization
 const sqlite3 = require('sqlite3').verbose();
-// const db = new sqlite3.Database('clm_database.db');
 
 // Create a directory to store uploaded images
 const uploadDirectory = './static/uploads';
@@ -16,10 +15,11 @@ const storage = multer.diskStorage({
     destination: uploadDirectory,
     filename: (req, file, callback) => {
         callback(null, file.originalname); // Use the original file name
-    },
+    }
 });
 const upload = multer({ storage });
 
+// Setting Express.js server variables
 const app = express();
 app.use(bodyParser.json()); // Add body-parser middleware
 const port = 8080;
@@ -28,7 +28,7 @@ app.set('view engine', 'ejs')
 
 // Configure express-session middleware
 app.use(session({
-    secret: 'your-secret-key', // Replace with a secure secret key
+    secret: 'secret-key', 
     resave: false,
     saveUninitialized: true,
 }));
@@ -38,7 +38,6 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/static/html/login_register.html'));
   });
 app.use(express.static(path.join(__dirname, '/static')));
-console.log(__dirname);
 app.use(express.urlencoded({ extended: true })); // Enable parsing of form data
 
 // Saltrounds variable for password hashing
@@ -56,10 +55,8 @@ app.post('/register', (req, res) => {
         if (err) {
             // Handle the error
             res.status(500).json({ error: 'Server error' });
-        } else if (row) {
-            // Username is already taken, inform the user
-            
-        } else {
+        } 
+        else {
             // Username is available, proceed with registration
             // Hash and store the password, insert the new user into the database, etc.
 
@@ -80,7 +77,6 @@ app.post('/register', (req, res) => {
             })
         }
     });
-
 });
 
 // Define a route to check if the username provided already exists in the database (called in login_register.html)
@@ -102,7 +98,6 @@ app.post('/check-username', (req, res) => {
             res.json({ exists });
         }
 
-        // Always close the database connection when done
         db.close();
     });
 });
@@ -223,7 +218,7 @@ app.get('/setCoordinates', (req, res) => {
 
 });
 
-// Define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js)
+// Define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js and annotater.html)
 app.get('/discardUpload', (req, res) => {
     const originalname = req.query.image_id;
     if (req.session.userId) {
@@ -264,7 +259,7 @@ app.get('/getSelectData', (req, res) => {
         
             // Extracting the filename without the extension which will be displayed in index.html as an option
             const customImagesNames = rows.map((row) => path.parse(row.filename).name);
-            // Extracting the full filename with extensions which will later be set as an attribute for each image
+            // Extracting the full filename with the extension which will later be set as an attribute for each image
             const extensions = rows.map((row) => row.filename);
 
             // Create an object with both arrays
