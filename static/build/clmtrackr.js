@@ -14917,11 +14917,9 @@ var clm = {
 			}
 
 			var cc = canvas.getContext('2d', { willReadFrequently: true });
-            // made fillstyle for the eyes tracking transparent
-			cc.fillStyle = 'rgb(200,200,200, 0)';
-            // made strokestyle transparent
-			cc.strokeStyle = 'rgb(130,255,50,0)';
-			//cc.lineWidth = 1;
+			cc.fillStyle = 'rgb(200,200,200)';
+			cc.strokeStyle = 'rgb(130,255,50)';
+			cc.lineWidth = 1;
 
 			var paths;
 			if (path === undefined) {

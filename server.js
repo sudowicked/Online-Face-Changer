@@ -1,4 +1,4 @@
-// Declaration of required modules
+// declaration of required modules
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 // SQLite initialization
 const sqlite3 = require('sqlite3').verbose();
 
-// Create a directory to store uploaded images
+// create a directory to store uploaded images
 const uploadDirectory = './static/uploads';
 const storage = multer.diskStorage({
     destination: uploadDirectory,
@@ -19,50 +19,50 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Setting Express.js server variables
+// setting Express.js server variables
 const app = express();
 app.use(bodyParser.json()); // Add body-parser middleware
 const port = 8080;
 
 app.set('view engine', 'ejs')
 
-// Configure express-session middleware
+// configure express-session middleware
 app.use(session({
     secret: 'secret-key', 
     resave: false,
     saveUninitialized: true,
 }));
 
-// Serve static files from the "public" directory
+// serve static files from the "public" directory
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/static/html/login_register.html'));
   });
 app.use(express.static(path.join(__dirname, '/static')));
 app.use(express.urlencoded({ extended: true })); // Enable parsing of form data
 
-// Saltrounds variable for password hashing
+// saltrounds variable for password hashing
 const saltRounds = 10;
 
-// Define a route to handle the form submission
+// define a route to handle the form submission
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
-    // Open a connection to the SQLite database
+    // open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
     
-    // Check if the username exists in the database
+    // check if the username exists in the database
     const sql = 'SELECT * FROM users WHERE username = ?';
     db.get(sql, [username], (err, row) => {
         if (err) {
-            // Handle the error
+            // handle the error
             res.status(500).json({ error: 'Server error' });
         } 
         else {
-            // Username is available, proceed with registration
-            // Hash and store the password, insert the new user into the database, etc.
+            // username is available, proceed with registration
+            // hash and store the password, insert the new user into the database, etc.
 
             bcrypt.hash(password, saltRounds, function(err,hash) {
 
-                // Insert the user into the database
+                // insert the user into the database
                 const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
                 db.run(sql, [username, hash], (err) => {
                     if (err) {
@@ -79,21 +79,21 @@ app.post('/register', (req, res) => {
     });
 });
 
-// Define a route to check if the username provided already exists in the database (called in login_register.html)
+// define a route to check if the username provided already exists in the database (called in login_register.html)
 app.post('/check-username', (req, res) => {
     const { username } = req.body;
 
-    // Open a connection to the SQLite database
+    // open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
 
     const sql = 'SELECT username FROM users WHERE username = ?';
     db.get(sql, [username], (err, row) => {
         if (err) {
-            // Handle the database error, e.g., by sending a 500 Internal Server Error response
+            // handle the database error, e.g., by sending a 500 Internal Server Error response
             res.status(500).json({ error: 'Database error' });
         } else {
-            // If row exists, the username is taken; otherwise, it's available
-            // Using the double ! operator we essentialy assign true to the const if a row exists and false if it doesn't
+            // if row exists, the username is taken; otherwise, it's available
+            // using the double ! operator we essentialy assign true to the const if a row exists and false if it doesn't
             const exists = !!row;
             res.json({ exists });
         }
@@ -103,15 +103,15 @@ app.post('/check-username', (req, res) => {
 });
 
 
-// Define a route to handle login form submissions
+// define a route to handle login form submissions
 app.post('/login', (req, res) => {
 
     const { username, password } = req.body;
 
-    // Open a connection to the SQLite database
+    // open a connection to the SQLite database
     const db = new sqlite3.Database('clm_database.db');
 
-    // Retrieve the hashed password from the database based on the provided username
+    // retrieve the hashed password from the database based on the provided username
     const sql = 'SELECT * FROM users WHERE username = ?';
     db.get(sql, [username], (err, row) => {
         if (err) {
@@ -120,17 +120,17 @@ app.post('/login', (req, res) => {
         } else if (row) {
         const hashedPasswordFromDatabase = row.password;
 
-        // Compare the submitted password with the stored hash
+        // compare the submitted password with the stored hash
         bcrypt.compare(password, hashedPasswordFromDatabase, function(err, result) {
             if (result) {
             // Passwords match, login successful
             const userId = row.user_id; // Retrieve the user ID from the database row
             console.log('User ID:', userId);
 
-            // You can set the user's ID in the session or handle it as needed here
+            // you can set the user's ID in the session or handle it as needed here
             req.session.userId = userId;
 
-            // Redirect to a secured page 
+            // redirect to a secured page 
             res.redirect('/html/index.html');
             } else {
             // Passwords do not match, login failed
@@ -139,22 +139,22 @@ app.post('/login', (req, res) => {
             db.close();
         });
         } else {
-            // User not found
+            // user not found
             res.redirect('/html/failed_login.html');
             db.close();
         }
     });
 });
 
-// Define a route to handle image uploads 
+// define a route to handle image uploads 
 app.post('/upload', upload.single('image'), (req, res) => {
     var { originalname } = req.file;
 
-    // Check if the user is logged in
+    // check if the user is logged in
     if (req.session.userId) {
         const db = new sqlite3.Database('clm_database.db');
 
-        // Check if the filename already exists for the specific user
+        // check if the filename already exists for the specific user
         const sqlCheck = 'SELECT COUNT(*) AS count FROM user_images WHERE user_id = ? AND filename = ?';
 
         db.get(sqlCheck, [req.session.userId, originalname], (checkErr, row) => {
@@ -171,14 +171,14 @@ app.post('/upload', upload.single('image'), (req, res) => {
                     </script>
                 `);
                 } else {
-                    // Filename is unique, insert the image information into the database
+                    // filename is unique, insert the image information into the database
                     const sqlInsert = 'INSERT INTO user_images (user_id, filename) VALUES (?, ?)';
                     db.run(sqlInsert, [req.session.userId, originalname], (insertErr) => {
                         if (insertErr) {
                             console.error(insertErr.message);
                             res.send('Image upload failed.');
                         } else {
-                            // Redirect to the annotater page passing the image filename as a query parameter
+                            // redirect to the annotater page passing the image filename as a query parameter
                             res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
                         }
                     });
@@ -187,12 +187,12 @@ app.post('/upload', upload.single('image'), (req, res) => {
         });
     } 
     else {
-        // User is not logged in; handle this case.
+        // user is not logged in; handle this case.
         res.send('User is not logged in.');
     }
 });
 
-// Define a route to add the coordinates from the image annotation to the database (called in annotater.js)
+// define a route to add the coordinates from the image annotation to the database (called in annotater.js)
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
     const originalname = req.query.image_id;
@@ -212,13 +212,13 @@ app.get('/setCoordinates', (req, res) => {
     }
     
     else {
-        // User is not logged in; handle this case.
+        // user is not logged in; handle this case.
         res.send('User is not logged in.');
     }
 
 });
 
-// Define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js and annotater.html)
+// define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js and annotater.html)
 app.get('/discardUpload', (req, res) => {
     const originalname = req.query.image_id;
     if (req.session.userId) {
@@ -237,16 +237,16 @@ app.get('/discardUpload', (req, res) => {
     }
     
     else {
-        // User is not logged in; handle this case.
+        // user is not logged in; handle this case.
         res.send('User is not logged in.');
     }
     
   }); 
 
-// Define a route to fetch the images' names from the database (called in client.js)
+// define a route to fetch the images' names from the database (called in client.js)
 app.get('/getSelectData', (req, res) => {
     const db = new sqlite3.Database('clm_database.db');
-    // Fetch data from the database 
+    // fetch data from the database 
     userId = req.session.userId;
     const sql = 'SELECT filename FROM user_images WHERE user_id = ?';
     db.all(sql, [req.session.userId], (err, rows) => {
@@ -257,22 +257,22 @@ app.get('/getSelectData', (req, res) => {
         
         else if (rows && rows.length > 0) {
         
-            // Extracting the filename without the extension which will be displayed in index.html as an option
+            // extracting the filename without the extension which will be displayed in index.html as an option
             const customImagesNames = rows.map((row) => path.parse(row.filename).name);
-            // Extracting the full filename with the extension which will later be set as an attribute for each image
+            // extracting the full filename with the extension which will later be set as an attribute for each image
             const extensions = rows.map((row) => row.filename);
 
-            // Create an object with both arrays
+            // create an object with both arrays
             const responseData = {
                 selectData: customImagesNames,
                 imageExtensions: extensions
             };
  
-            // Send the data as JSON in the response
+            // send the data as JSON in the response
             res.json(responseData);
             }  
         else {
-            // Handling the JSON response in the case the user hasn't uploaded any custom images
+            // handling the JSON response in the case the user hasn't uploaded any custom images
             const selectData = [];
             const extensions = [];
             const responseData = {
@@ -286,7 +286,7 @@ app.get('/getSelectData', (req, res) => {
 
 });  
 
-// Define a route to fetch image data from the database (called in client.js)
+// define a route to fetch image data from the database (called in client.js)
 app.get('/getImages', (req, res) => {
     const db = new sqlite3.Database('clm_database.db'); 
     userId = req.session.userId;
@@ -297,20 +297,20 @@ app.get('/getImages', (req, res) => {
             res.status(500).send('Internal Server Error');
         }   
         else if (rows && rows.length > 0) {
-            // Define the image directory
+            // define the image directory
             const image_url = "../uploads/";
         
-            // Map rows to the desired format
+            // map rows to the desired format
             const imageData = rows.map((row) => ({
                 id: path.parse(row.filename).name,
                 path: image_url + row.filename,
-                coordinates: row.coordinates // Add coordinates to the response
+                coordinates: row.coordinates // add the coordinates to the response
             }));               
-            // Send the data as JSON in the response
+            // send the data as JSON in the response
             res.json(imageData);
             }
         else {
-            // Handling the JSON response in the case the user hasn't uploaded any custom images
+            // handling the JSON response in case the user hasn't uploaded any custom images
             const imageData = [];
             res.json(imageData);
         };               
@@ -318,7 +318,7 @@ app.get('/getImages', (req, res) => {
 
 });
 
-// Start the server
+// start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });

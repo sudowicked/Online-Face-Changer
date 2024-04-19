@@ -1,8 +1,8 @@
 var option_value = 17;
 
-// Asynchronous function to update the <select> element with data from the server
+// asynchronous function to update the <select> element with data from the server
 function updateSelectWithData() {
-    // Make a request to the server route
+    // make a request to the server route
     fetch('/getSelectData')
         .then((response) => response.json())
         .then((data) => {
@@ -11,22 +11,22 @@ function updateSelectWithData() {
             const selectData = data.selectData;
             const imageExtensions = data.imageExtensions;
 
-            // Add new options based on the data
+            // add new options based on the data
 
             if (selectData !== undefined) {
                 selectData.forEach((optionText, index) => {
                     const extension = imageExtensions[index];
                     
-                    // Capitalize the first letter of optionText to match the format
+                    // capitalize the first letter of optionText to match the format
                     var capitalizedText = optionText.charAt(0).toUpperCase() + optionText.slice(1);
     
                     const option = document.createElement('option');
                     option.text = capitalizedText;
                     
-                    // Set the extension as a data attribute to each option
+                    // set the extension as a data attribute to each option
                     option.setAttribute('data-extension', extension); 
                     
-                    // Adding a value to each option starting from 17 as there are already 17 included images in the app
+                    // adding a value to each option starting from 17 as there are already 17 included images in the app
                     option.value = option_value;
                     option_value += 1;
     
@@ -35,7 +35,7 @@ function updateSelectWithData() {
                 });
             }
 
-            // After the custom images' names have been loaded to our selectElement we create the container with the available options 
+            // after the custom images' names have been loaded to our selectElement we create the container with the available options 
             createOptionsContainer();
         })
         .catch((error) => {
@@ -43,28 +43,28 @@ function updateSelectWithData() {
         });
 }
 
-// Call the function to update the <select> element when needed
+// call the function to update the <select> element when needed
 updateSelectWithData();
 
 var selectedItem;
 const maxVisibleItems = 5; // Set the maximum visible items for the container
 
-// Function to create the optionsContainer based on the updated selectmask
+// function to create the optionsContainer based on the updated selectmask
 function createOptionsContainer() {
     const optionsContainer = document.querySelector(".options-container");
 
-    // Get the index of the current image mask which is set randomly in index.html
+    // get the index of the current image mask which is set randomly in index.html
     var currentMask = selectElement.selectedIndex;
 
-    // Iterate over the options in the select element
+    // iterate over the options in the select element
     for (let i = 0; i < selectElement.options.length; i++) {
         var option = selectElement.options[i];
 
-        // Create a new container element for each option
+        // create a new container element for each option
         var optionContainer = document.createElement('div');
         optionContainer.classList.add('option-container');
 
-        // Create a new span element for each option
+        // create a new span element for each option
         var newOption = document.createElement('span');
 
         newOption.classList.add('menu-item');
@@ -74,16 +74,16 @@ function createOptionsContainer() {
         newOption.setAttribute('option-extension', extension);
 
 
-        // Add a "data-selected" attribute to the focused item
+        // add a "data-selected" attribute to the focused item
         if (i === currentMask) {
             newOption.setAttribute('data-selected', 'true');
         }
 
-        // Append the new span and deleteButton elements to the container
+        // append the new span and deleteButton elements to the container
         optionContainer.appendChild(newOption);
 
         if (i >= 17) {
-            // Create a delete button for custom uploaded images
+            // create a delete button for custom uploaded images
             var deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-button');
             deleteButton.textContent = 'delete';
@@ -93,21 +93,21 @@ function createOptionsContainer() {
             optionContainer.appendChild(deleteButton);
         }
 
-        // Append the container to the optionsContainer
+        // append the container to the optionsContainer
         optionsContainer.appendChild(optionContainer);
 
     }    
     
-    // Get the selected item using the attribute selector
+    // get the selected item using the attribute selector
     selectedItem = document.querySelector('.menu-item[data-selected="true"]');
 
-    // Scroll the selected item into view
+    // scroll the selected item into view
     selectedItem.scrollIntoView({ behavior: 'smooth' });
 
 
     var menuDeleteButtons = document.querySelectorAll(".delete-button");
 
-    // Handle the custom images deletion
+    // handle the custom images deletion
     menuDeleteButtons.forEach((item, index) => {
         item.addEventListener("click", function () {
             if (containerOpen == true) {
@@ -120,12 +120,12 @@ function createOptionsContainer() {
         });
     });
 
-    // Code to close the container when the user clicks anywhere on the page and automatically scroll to the selected option
+    // close the container when the user clicks anywhere on the page and automatically scroll to the selected option
     document.addEventListener('click', (event) => {
         const isClickInsideContainer = optionsContainer.contains(event.target);
         if (!isClickInsideContainer) {
-            // Check if the click is outside the container
-            optionsContainer.style.maxHeight = null; // Close the container
+            // check if the click is outside the container
+            optionsContainer.style.maxHeight = null; // close the container
             optionsContainer.style.overflowY = 'hidden';
             menuItems.forEach((item, index) => {
                 if (index === currentMask) {
@@ -139,7 +139,7 @@ function createOptionsContainer() {
 
     var containerOpen = false;
 
-    // Code to open/close the container displaying the available images
+    // open/close the container displaying the available images
     optionsContainer.addEventListener('click', (event) => {
         event.stopPropagation();
         if (optionsContainer.style.maxHeight) {
@@ -149,7 +149,7 @@ function createOptionsContainer() {
         } else {
             const totalHeight = optionsContainer.scrollHeight;
             const visibleHeight = maxVisibleItems * (totalHeight / optionsContainer.children.length);
-            optionsContainer.style.maxHeight = visibleHeight + 'px'; // Open the container
+            optionsContainer.style.maxHeight = visibleHeight + 'px'; // open the container
             optionsContainer.style.overflowY = 'auto';
             containerOpen = true;
         }
@@ -157,16 +157,16 @@ function createOptionsContainer() {
         
     var menuItems = document.querySelectorAll(".menu-item");
     
-    // Handle image mask selection
+    // handle image mask selection
     menuItems.forEach((item, index) => {
         item.addEventListener("click", function () {
             if (containerOpen == true) {
-                // Remove the "data-selected" attribute from the previously selected item
+                // remove the "data-selected" attribute from the previously selected item
                 if (selectedItem) {
                     selectedItem.removeAttribute('data-selected');
                 }
 
-                // Add the "data-selected" attribute to the clicked item
+                // add the "data-selected" attribute to the clicked item
                 item.setAttribute('data-selected', 'true');
                 selectedItem = item;
 
@@ -175,14 +175,14 @@ function createOptionsContainer() {
                 currentMask = index;
                 selectElement.selectedIndex = currentMask;
                 
-                // This line is crucial as it is responsible for actually changing the image mask by calling the event listener for when the selectmask changes
+                // this line is crucial as it is responsible for actually changing the image mask by calling the event listener for when the selectmask changes
                 selectElement.dispatchEvent(new Event("change"));
             }
         });
     });
 
 
-    // Custom scrolling function with a delay if the selected image is in the last five options
+    // custom scrolling function with a delay if the selected image is in the last five options
     function customScroll(item, index) {
         if (index >= optionsContainer.children.length - maxVisibleItems) {
             setTimeout(() => {
@@ -197,7 +197,7 @@ function createOptionsContainer() {
     var arrowUp = document.getElementById("arrow-up");
     var arrowDown = document.getElementById("arrow-down");
 
-    // Function for changing the image mask using the arrows with the same logic as when selecting each option by the container
+    // function for changing the image mask using the arrows with the same logic as when selecting each option by the container
     function arrowsUpdateAndScroll(index) {
         currentMask = index;
         selectElement.selectedIndex = currentMask;
@@ -207,7 +207,7 @@ function createOptionsContainer() {
         selectedItem.scrollIntoView({ behavior: "smooth" });
     }
     
-    // Event for when arrowDown is clicked
+    // event for when arrowDown is clicked
     arrowDown.addEventListener("click", function () {
         if (currentMask < selectElement.options.length - 1) {
             currentMask++;
@@ -217,7 +217,7 @@ function createOptionsContainer() {
         arrowsUpdateAndScroll(currentMask);
     });
     
-    // Same logic with arrowDown
+    // same logic with arrowDown
     arrowUp.addEventListener("click", function () {
         if (currentMask > 0) {
             currentMask--;
@@ -232,7 +232,7 @@ function createOptionsContainer() {
 var clientimages = [];
 var clientcoordinates = [];
 
-// Asynchronous function to update the images array in index.html
+// asynchronous function to update the images array in index.html
 async function updateImages() {
     try {
         const response = await fetch('/getImages');
@@ -244,11 +244,11 @@ async function updateImages() {
         }));
 
         const imageCoordinates = data.reduce((acc, item) => {
-            // Assuming that item.id contains the key (e.g., "audrey")
+            // assuming that item.id contains the key (e.g., "audrey")
             const key = item.id;
             const coordinates = JSON.parse(item.coordinates);
             
-            // Assign the coordinates array to the key in the accumulator object
+            // assign the coordinates array to the key in the accumulator object
             acc[key] = coordinates;
             
             return acc;
@@ -256,7 +256,7 @@ async function updateImages() {
 
         images = images.concat(clientImages);
 
-        // Once images are updated, call the function within index.html that relies on clientimages
+        // once images are updated, call the function within index.html that relies on clientimages
         handleClientImages(imageCoordinates);
     } catch (error) {
         console.error('Error fetching image data:', error);

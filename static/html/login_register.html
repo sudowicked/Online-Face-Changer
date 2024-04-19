@@ -258,7 +258,7 @@
                         <div class="form-group">
                             <label for="register_username">Username:</label>
                             <input type="text" id="register_username" name="username" required>
-                            <!-- Add an empty <p> element for displaying the username availability message -->
+                            <!-- add an empty <p> element for displaying the username availability message -->
                             <div id="usernameAvailability"> </div> 
                         </div>
                         <div class="form-group">
@@ -308,11 +308,11 @@
         </script>
 
         <script>
-            // JavaScript function to check username availability
+            // javaScript function to check username availability
             function checkUsernameAvailability() {
                 const username = document.getElementById('register_username').value;
                 
-                // Send an AJAX request to the server to check if the username exists
+                // send an AJAX request to the server to check if the username exists
                 fetch('/check-username', {
                     method: 'POST',
                     headers: {
@@ -326,11 +326,11 @@
                 const messageArea = document.getElementById('usernameAvailability');
 
                 if (data.exists) {
-                    // Create a p element with the ⚠️ symbol
+                    // create a p element with the ⚠️ symbol
                     const paragraph = document.createElement('p');
                     paragraph.innerHTML = '<span class="warning-symbol">⚠️</span> <span class = "error-message"> Username is already taken </span>';
 
-                    // Add the paragraph to the messageArea
+                    // add the paragraph to the messageArea
                     messageArea.innerHTML = ''; // Clear any previous content
                     messageArea.appendChild(paragraph);
 
@@ -345,7 +345,7 @@
                 });
             }
         
-            // Add an event listener to the username input field to display the availability of the username
+            // add an event listener to the username input field to display the availability of the username
             const registerUsernameInput = document.getElementById('register_username');
             registerUsernameInput.addEventListener('input', checkUsernameAvailability);
         </script>
