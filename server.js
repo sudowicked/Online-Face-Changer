@@ -14,17 +14,15 @@ const uploadDirectory = './static/uploads';
 const storage = multer.diskStorage({
     destination: uploadDirectory,
     filename: (req, file, callback) => {
-        callback(null, file.originalname); // Use the original file name
+        callback(null, file.originalname); // use the original file name
     }
 });
 const upload = multer({ storage });
 
 // setting Express.js server variables
 const app = express();
-app.use(bodyParser.json()); // Add body-parser middleware
+app.use(bodyParser.json()); // add body-parser middleware
 const port = 8080;
-
-app.set('view engine', 'ejs')
 
 // configure express-session middleware
 app.use(session({
@@ -38,7 +36,7 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/static/html/login_register.html'));
   });
 app.use(express.static(path.join(__dirname, '/static')));
-app.use(express.urlencoded({ extended: true })); // Enable parsing of form data
+app.use(express.urlencoded({ extended: true })); // enable parsing of form data
 
 // saltrounds variable for password hashing
 const saltRounds = 10;
@@ -69,7 +67,7 @@ app.post('/register', (req, res) => {
                         console.error(err.message);
                         res.send('Registration failed.');
                     } else {
-                        //res.send('Registration successful!');
+                        // res.send('Registration successful!');
                         res.redirect('/html/register_success.html');
                     }
                     db.close();
@@ -97,7 +95,6 @@ app.post('/check-username', (req, res) => {
             const exists = !!row;
             res.json({ exists });
         }
-
         db.close();
     });
 });
@@ -178,21 +175,19 @@ app.post('/upload', upload.single('image'), (req, res) => {
                             console.error(insertErr.message);
                             res.send('Image upload failed.');
                         } else {
-                            // redirect to the annotater page passing the image filename as a query parameter
-                            res.redirect(`/annotater/annotater.html?originalname=${originalname}`);
+                            // redirect to the annotator page passing the image filename as a query parameter
+                            res.redirect(`/annotator/annotator.html?originalname=${originalname}`);
                         }
                     });
                 }
             }
         });
-    } 
-    else {
-        // user is not logged in; handle this case.
+    } else {
         res.send('User is not logged in.');
     }
 });
 
-// define a route to add the coordinates from the image annotation to the database (called in annotater.js)
+// define a route to add the coordinates from the image annotation to the database (called in annotator.js)
 app.get('/setCoordinates', (req, res) => {
     const coordinates = req.query.coordinates;
     const originalname = req.query.image_id;
@@ -209,16 +204,13 @@ app.get('/setCoordinates', (req, res) => {
                 res.redirect('/html/index.html');
             }
         })          
-    }
-    
-    else {
-        // user is not logged in; handle this case.
+    } else {
         res.send('User is not logged in.');
     }
-
 });
 
-// define a route to discard the upload of an image in annotater.html (also used for deleting already uploaded images in client.js and annotater.html)
+// define a route to discard the upload of an image in annotator.html
+// (also used for deleting already uploaded images in client.js and annotator.html)
 app.get('/discardUpload', (req, res) => {
     const originalname = req.query.image_id;
     if (req.session.userId) {
@@ -234,14 +226,10 @@ app.get('/discardUpload', (req, res) => {
                 res.redirect('/html/index.html'); 
             }
         })          
-    }
-    
-    else {
-        // user is not logged in; handle this case.
+    } else {
         res.send('User is not logged in.');
     }
-    
-  }); 
+}); 
 
 // define a route to fetch the images' names from the database (called in client.js)
 app.get('/getSelectData', (req, res) => {
@@ -280,10 +268,8 @@ app.get('/getSelectData', (req, res) => {
                 imageExtensions: extensions
             };
             res.json(responseData);
-        }
-                       
+        }            
     })
-
 });  
 
 // define a route to fetch image data from the database (called in client.js)
@@ -315,7 +301,6 @@ app.get('/getImages', (req, res) => {
             res.json(imageData);
         };               
     })
-
 });
 
 // start the server

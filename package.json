@@ -35,18 +35,10 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "connect": "^3.7.0",
-    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "jquery": "^3.7.0",
-    "jsfeat": "git+https://github.com/inspirit/jsfeat",
-    "mosse": "^0.1.1",
     "multer": "^1.4.5-lts.1",
     "numeric": "^1.2.6",
-    "perfect-scrollbar": "^1.5.5",
-    "promise-polyfill": "^6.0.2",
-    "raf": "^3.3.2",
     "serve-static": "^1.15.0",
     "sqlite3": "^5.1.6"
   }

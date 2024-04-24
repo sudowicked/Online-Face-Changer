@@ -35,7 +35,8 @@ function updateSelectWithData() {
                 });
             }
 
-            // after the custom images' names have been loaded to our selectElement we create the container with the available options 
+            // after the custom images' names have been loaded to our selectElement 
+            // we create the container with the available options 
             createOptionsContainer();
         })
         .catch((error) => {
