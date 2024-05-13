@@ -43,14 +43,14 @@
 
             #container {
                 position : relative;
-                max-height: 450px;
+                max-height: 300px;
             }
 
             #content {
                 margin-top : 50px;
                 margin-left : auto;
                 margin-right : auto;
-                max-width: 600px;
+                max-width: 400px;
             }
 
             h2 {
@@ -63,11 +63,11 @@
 
             .btn {
                 font-family: 'Lato';
-                font-size: 16px;
+                font-size: 10px;
             }
 
             #webgl2 {
-                display : none;
+                display:none;
             } 
 
             #controls {
@@ -166,7 +166,7 @@
                 position: absolute;
                 z-index: 1; /* Ensures the UI is displayed on top of other content */
                 bottom: 0;
-                margin-bottom:9.5%;
+                margin-bottom:13.5%;
                 right: 0;
                 border-radius: 15px;
                 border: none;
@@ -205,7 +205,6 @@
                 display: inline-block;
                 font-weight: 400;
                 font-size: 18px;
-                padding: 0 18px;
                 line-height: 50px;
                 text-align: center;
                 text-decoration: none;
@@ -223,7 +222,6 @@
                 display: inline-block;
                 font-weight: 400;
                 font-size: 18px;
-                padding: 0 18px;
                 line-height: 50px;
                 text-align: center;
                 text-decoration: none;
@@ -299,9 +297,9 @@
                 <button id="captureButton" class="capture-button"><img src="../images/Screenshot_PNG.png" class="capture-image" height="40px" width="40px"> </button>  
                 <button id="uploadButton" class="upload-button"><img src="../images/Upload_PNG.png" class="upload-image" height="40px" width="40px"> </button>  
 
-                <video id="videoel" width="600" height="450" preload="auto"></video>
-                <canvas id="overlay" width="600" height="450"></canvas>
-                <canvas id="webgl" width="600" height="450"></canvas>
+                <video id="videoel" width="450" height="300" preload="auto"></video>
+                <canvas id="overlay" width="450" height="300"></canvas>
+                <canvas id="webgl" width="450" height="300"></canvas>
             </div>
         
             <div id="controls">
@@ -338,7 +336,7 @@
                 </body>
             </div>
 
-            <canvas id="webgl2" width="600" height="450"></canvas>
+            <canvas id="webgl2" width="450" height="300"></canvas>
             
             <script  src="../js/client.js"></script>  
     
@@ -593,6 +591,7 @@
                     return Math.floor(Math.random() * max);
                 }
 
+                // randomly select a face each time the app opens
                 var selectElement = document.getElementById("selectmask");
                 var randomIndex = getRandomInt(images.length);
                 selectElement.selectedIndex = randomIndex;
@@ -604,13 +603,13 @@
 
                 // function to handle the updated images and masks the user has provided
                 function handleClientImages(imageCoordinates) {
+                    // update the masks object with the corresponding index of the coordinates array   
                     for (var name in imageCoordinates) {
-                        masks[name] = imageCoordinates[name]; // update the masks object with the corresponding index of the coordinates array   
+                        masks[name] = imageCoordinates[name]; 
                     };
                     console.log(images);
                     console.log(imageCoordinates);
                     console.log(masks);
-
                     
                     var imageCount = 0;
                     loadMask = function(index) {
@@ -701,12 +700,12 @@
                         var result = Poisson.blend(30, 0, 0);
                         // render to canvas
                         newcanvas.getContext('2d', { willReadFrequently: true }).putImageData(result, 0, 0);
-                        newcanvas.imageSmoothingEnabled = true;
+                        newcanvas.imageSmoothingEnabled = true; 
                         
                         // final deformation
                         fd.load(newcanvas, pos, pModel);
                         animationRequest = requestAnimFrame(drawMaskLoop);
-                    });
+                  });
                 }
 
                 function drawMaskLoop() {
